@@ -455,16 +455,16 @@
           一个面向学生的规划助手：它导入学校任务，理解目标与限制，把大型作业拆成可执行的时间块，并通过对话持续维护一个动态日程。
         </p>
         <div class="meta">
-          <span class="pill">原型周期：3 周</span>
+          <span class="pill">原型周期：4–5 周</span>
           <span class="pill">平台：macOS 桌面应用</span>
-          <span class="pill">MVP 数据：本地 / 粘贴 / 模拟</span>
+          <span class="pill">MVP 数据：真实 Schoology / 本地 / 粘贴</span>
           <span class="pill">技术底座：本地 Codex + MCP 工具</span>
         </div>
         <div class="doc-info table" style="margin-top:20px">
           <table style="min-width:0">
             <caption>文档元信息</caption>
             <tbody>
-              <tr><th scope="row">版本</th><td>v0.7（个人项目，移除隐私/合规范围）</td><th scope="row">状态</th><td>评审通过 / 满足“开发启动条件”后可启动 Mac 桌面 P0 开发</td></tr>
+              <tr><th scope="row">版本</th><td>v0.8（真实 Schoology 纳入 MVP，工期 4–5 周）</td><th scope="row">状态</th><td>评审通过 / 满足“开发启动条件”后可启动 Mac 桌面 P0 开发</td></tr>
               <tr><th scope="row">创建日期</th><td>2026-06</td><th scope="row">最近更新</th><td>2026-07-01</td></tr>
               <tr><th scope="row">负责人</th><td>产品与工程原型小组</td><th scope="row">读者</th><td>产品、工程评审</td></tr>
             </tbody>
@@ -495,7 +495,7 @@
         <li><a href="#s12">数据模型</a></li>
         <li><a href="#s13">智能体可控性</a></li>
         <li><a href="#s14">成功指标与验收标准</a></li>
-        <li><a href="#s15">三周 MVP 计划</a></li>
+        <li><a href="#s15">四至五周 MVP 计划</a></li>
         <li><a href="#s16">长期路线图</a></li>
         <li><a href="#s17">风险与缓解</a></li>
         <li><a href="#s18">演示脚本</a></li>
@@ -541,7 +541,7 @@
           <ul>
             <li>MVP 是单用户 Mac 桌面应用，不服务家长端、老师端、学校管理员端，也不做班级级数据分析或多人协作。</li>
             <li>不做云账号、不做多设备同步、不做 Web/SaaS 管理后台。</li>
-            <li>数据默认保存在用户本机；Schoology 真实 API、浏览器插件和外部日历同步均为后续路线图。</li>
+            <li>数据默认保存在用户本机；<strong>MVP 接入真实 Schoology</strong>（官方 API 优先、浏览器插件兜底）导入课程/作业/截止日期（成绩只读展示）；外部日历同步仍为后续路线图。</li>
           </ul>
         </div>
       </div>
@@ -584,7 +584,8 @@
           <h3>目标 · MVP 必达</h3>
           <ul>
             <li>创建一个主周日程，合并固定安排与学校任务。</li>
-            <li>支持手动录入或粘贴作业信息；提供模拟 Schoology 数据。</li>
+            <li><strong>接入真实 Schoology 导入课程/作业/截止日期</strong>（官方 API 优先、浏览器插件兜底，成绩只读展示，见<a href="#s7">第 7 节</a>）。</li>
+            <li>支持手动录入或粘贴作业信息；保留内置 Schoology fixture 作为离线/降级与开发路径。</li>
             <li>根据作业描述和评分量规，把大型任务拆成更小的工作块。</li>
             <li>允许用户通过点击编辑面板创建、移动、删除和编辑时间块；自由拖拽/拉伸为路线图增强项（见<a href="#s15">第 15 节</a> MVP Gate）。</li>
             <li>允许用户用自然语言和智能体对话，例如“我周六下午 5–8 点要出去”。</li>
@@ -595,7 +596,6 @@
             <li>随着使用学习偏好，例如“我喜欢跑步后做数学”（MVP 仅做记录，不做可信学习闭环）。</li>
             <li>成绩感知优先级估算（MVP 以只读示例演示，不承诺真实计算，见<a href="#s9">第 9 节</a>）。</li>
             <li>自由拖拽/拉伸、菜单栏快速录入、导入 Apple Calendar 忙闲信息。（macOS 本地通知为 P1 committed 项，非愿景级，见<a href="#s15">第 15 节</a>）</li>
-            <li>在可行时从 Schoology 官方 API 导入作业、截止日期、活动和成绩。</li>
           </ul>
         </div>
         <div class="card span-6">
@@ -604,7 +604,7 @@
           <ul>
             <li><strong>渠道</strong>：不做非官方的个人微信、Instagram、Snapchat 机器人集成（官方渠道属未来路线图，见<a href="#s16">第 16 节</a>）。</li>
             <li><strong>能力</strong>：不自动提交作业或修改成绩；不承诺精确预测 GPA（平均学分绩点）；不在没有用户确认的情况下做重大计划变更。</li>
-            <li><strong>依赖</strong>：MVP 不依赖学校管理员批准 API 权限，不依赖浏览器插件抓取，也不建立真实 Schoology 或外部日历网络连接。</li>
+            <li><strong>依赖</strong>：MVP 接入真实 Schoology（官方 API 优先、插件兜底）；若学区未开放个人 API key 且插件受阻，则降级到 fixture/粘贴并作为交付风险（见<a href="#s17">第 17 节</a>）。不建立外部日历网络连接。</li>
             <li><strong>用户范围</strong>：不做家长端 / 老师端，不做多人协作与小组作业协同。</li>
             <li><strong>平台</strong>：不做 SaaS、不做 Web 应用、不做移动 App；MVP 是个人版 macOS 桌面应用。</li>
           </ul>
@@ -652,10 +652,10 @@
           <p>本机持久化与可选外部数据来源。</p>
           <ul>
             <li>SQLite 本地数据库</li>
-            <li>用户手动输入、粘贴解析、内置 Schoology fixture</li>
+            <li><strong>真实 Schoology 导入：官方 API（OAuth 1.0a）优先、浏览器插件兜底（P0）</strong></li>
+            <li>用户手动输入、粘贴解析、内置 Schoology fixture（降级/开发）</li>
             <li>本地文件导入：PDF / 文本 / CSV（路线图）</li>
             <li>Apple Calendar 只读忙闲导入（路线图）</li>
-            <li>Schoology API 或浏览器插件导入（路线图）</li>
           </ul>
         </div>
       </div>
@@ -704,9 +704,9 @@
               <td>应用重启后可恢复；不依赖云队列或后台服务。</td>
             </tr>
             <tr>
-              <td>Import Adapters（Roadmap）</td>
-              <td>导入 Apple Calendar 忙闲、Schoology API、浏览器插件或本地文件。</td>
-              <td>MVP 只保留 adapter 接口，不实现真实外部连接。</td>
+              <td>Import Adapters</td>
+              <td>P0：真实 Schoology（官方 API + OAuth 1.0a，浏览器插件兜底）；降级：fixture/粘贴。路线图：Apple Calendar 忙闲、本地文件。</td>
+              <td>统一 <code>ImportAdapter</code> 接口，产出同一套 Assignment/Block/ImportSource；做认证、schema 校验、来源标记与去重；OAuth 密钥/令牌存 Keychain。</td>
             </tr>
           </tbody>
         </table>
@@ -859,35 +859,38 @@
 
     <section id="s7">
       <h2>7. Schoology 集成策略</h2>
+      <p class="muted">
+        真实 Schoology 接入是 MVP 的核心价值（直接回应<a href="#s2">第 2 节</a>“信息太分散”）。接入方式：<strong>官方 API 优先、浏览器插件兜底</strong>，两条路径归一到同一个 <code>ImportAdapter</code> 接口，产出同一套 <code>Assignment</code>/<code>Block</code>/<code>ImportSource</code> 模型，不改排程器与日程工具契约。fixture/粘贴保留为离线、降级与开发路径。
+      </p>
       <div class="grid">
         <div class="card span-4">
-          <span class="tag">MVP 模式</span>
-          <h3>手动或模拟导入</h3>
-          <p>
-            使用内置 fixture、用户手动输入或粘贴的作业信息（可让智能体解析粘贴的教学大纲以降低录入摩擦）。P0 不建立真实 Schoology 网络连接，不抓取页面；这样可以先验证 Mac 桌面日程和智能体逻辑。
-          </p>
-        </div>
-        <div class="card span-4">
-          <span class="tag">路线图</span>
-          <h3>浏览器插件导入</h3>
-          <p>
-            学生正常登录 Schoology，插件读取学生已经能看到的页面内容并提取结构化数据。该路径作为独立 adapter 设计，非 MVP 范围。
-          </p>
-        </div>
-        <div class="card span-4">
-          <span class="tag">路线图</span>
+          <span class="tag p0">MVP · 首选</span>
           <h3>官方 API 集成</h3>
           <p>
-            如果后续具备访问条件，本地导入 adapter 可使用 Schoology 官方 API 更稳定地读取课程、作业、成绩、事件和提交信息。
+            本地导入 adapter 用 Schoology 官方 REST API + OAuth 1.0a 读取课程、作业、截止日期、事件（成绩只读）。<strong>前提</strong>：学生能在账号设置生成个人 API key；Week 0 spike 先验证该前提是否成立。最稳、最结构化。
+          </p>
+        </div>
+        <div class="card span-4">
+          <span class="tag p0">MVP · 兜底</span>
+          <h3>浏览器插件导入</h3>
+          <p>
+            若学区未开放个人 API key，则走插件：学生正常登录 Schoology，插件读取学生已经能看到的页面并提取结构化数据。与 API 共用同一 <code>ImportAdapter</code> 接口；对页面改版更敏感、需维护。
+          </p>
+        </div>
+        <div class="card span-4">
+          <span class="tag">开发/降级</span>
+          <h3>fixture / 粘贴</h3>
+          <p>
+            内置 fixture、手动输入、粘贴教学大纲解析（LLM）。用于并行开发、离线演示，以及真实接入两条路径都受阻时的降级路径。解析结果进入 <code>Assignment</code> 草稿，用户确认后写入。
           </p>
         </div>
       </div>
       <div class="callout" style="margin-top:16px">
         <p>
-          <strong>MVP 决策</strong>：导入能力先做成本最低的本地路径：粘贴作业说明、粘贴教学大纲、导入内置示例数据。解析结果进入本地 <code>Assignment</code> 草稿，用户确认后才写入 SQLite。
+          <strong>MVP 决策</strong>：真实 Schoology 进入 MVP（见<a href="#s15">第 15 节</a>新增 Schoology 集成 Phase，工期扩到 4–5 周）。<strong>Week 0 前置 spike</strong>：用真实账号验证能否生成个人 API key 并成功拉一次 <code>sections/{section_id}/assignments</code>；成立→走 API，不成立→走插件，两者都不通→本轮降级到 fixture/粘贴并记为交付风险（见<a href="#s17">第 17 节</a>）。所有外部数据先进入本地 <code>Assignment</code> 草稿，去重与来源标记后由用户确认写入 SQLite。
         </p>
         <p>
-          <strong>路线图</strong>：Schoology 官方 API、浏览器插件、Apple Calendar 忙闲导入都作为独立 adapter 处理。未来接入时只需要把外部数据转成同一套 <code>Assignment</code> / <code>Block</code> / <code>ImportSource</code> 模型，不改变排程器和日程工具契约。
+          <strong>统一契约</strong>：官方 API、插件、fixture/粘贴、以及未来的 Apple Calendar 忙闲导入都实现同一 <code>ImportAdapter</code>，把外部数据转成同一套 <code>Assignment</code> / <code>Block</code> / <code>ImportSource</code> 模型；新增来源不改排程器和日程工具契约。Apple Calendar 忙闲导入仍为路线图。
         </p>
         <p>
           <strong>Schoology 参考资料</strong>：Schoology 开发者文档包含 REST API、OAuth 1.0a（HMAC-SHA1 签名）认证、作业接口例如 <code>sections/{section_id}/assignments</code>，以及成绩、课程、用户相关接口。项目应避免收集 Schoology 密码；更稳妥的方式是官方 OAuth 或读取用户已经可见页面的插件导入。OAuth consumer key/secret 与 token 存 macOS Keychain，不落 SQLite 明文。
@@ -1249,8 +1252,8 @@
             </tr>
             <tr>
               <td>ImportSource / SyncState</td>
-              <td>来源类型、文件/粘贴批次、外部 provider（路线图）、<code>external_id</code>、最后导入时间、状态、错误摘要</td>
-              <td>P0 用于 fixture/粘贴导入去重；路线图接 Schoology/Calendar 时复用同一来源模型。</td>
+              <td>来源类型(schoology_api/schoology_plugin/fixture/paste)、<code>provider</code>、认证引用(Keychain，不存明文)、<code>external_id</code>、导入批次、最后同步时间、游标/增量标记、状态、错误摘要</td>
+              <td>P0 承载真实 Schoology 同步与去重（<code>external_id</code> 幂等）：官方 API 与插件共用此模型；OAuth token 仅存 Keychain。fixture/粘贴复用同一来源模型。</td>
             </tr>
             <tr>
               <td>Preference</td>
@@ -1368,6 +1371,7 @@
             <li class="muted" style="font-size:0.9rem">以下 <strong>[GATE]</strong> 项为 go/no-go 硬门槛（全过才判 go），<strong>[OBS]</strong> 项为观测项不阻塞。</li>
             <li><strong>[GATE] 演示端到端</strong>：<a href="#s18">第 18 节</a>演示脚本可无开发者干预跑通（含关闭重开持久化、批量重排确认、撤销恢复）；允许正常用户确认 proposal 与高风险变更。</li>
             <li><strong>[GATE] 排程质量</strong>：在 ≥3 个真实一周作业 fixture 上，生成计划<strong>0 处硬约束违规</strong>（不压睡眠/不越截止/不逆依赖），且经 1 名目标学生评为“可用”（可小改）。</li>
+            <li><strong>[GATE] 真实 Schoology 导入</strong>：用真实账号经官方 API 或插件路径之一，拉到本周真实作业与截止日期，映射为 <code>Assignment</code>/<code>Block</code> 并按 <code>external_id</code> 去重、标记来源；重复同步不产生重复块。<em>例外</em>：若 Week 0 spike 确认 API 与插件两条真实路径均不可用，本条降级为 fixture 演示并在 Gate 明确记录（此时不判 fail，但视为核心价值未验证，见<a href="#s17">第 17 节</a>）。</li>
             <li><strong>[GATE] 拆分质量</strong>：评测集 N≥20 fixture，<strong>项目作业拆分人工通过率 ≥80%</strong>（“通过”＝按§8 rubric 检查表由指定评审判定：含研究/制作/复核类可执行块且工时估算合理）。</li>
             <li><strong>[OBS] 接受率（北极星雏形）</strong>：AI 生成时间块被用户直接接受（未重排/删除）的比例，原型期观测参考 ≥60%，<strong>观测项而非门槛</strong>。</li>
             <li><strong>[GATE] 数据持久化</strong>：录入的作业与时间块关闭重开后不丢失。</li>
@@ -1389,13 +1393,13 @@
     </section>
 
     <section id="s15">
-      <h2>15. 三周 MVP 计划</h2>
+      <h2>15. 四至五周 MVP 计划</h2>
       <p class="muted">
-        <strong>技术底座</strong>：个人版 Mac 桌面应用，本地运行 Codex 工具调用循环与 MCP Schedule Server，SQLite 保存日程数据。三周聚焦于<strong>单用户本地可信闭环</strong>：时间块模型、Mac 周日程界面、手动/粘贴/fixture 导入、MVP 工具契约、确定性排程、proposal 确认与撤销。<strong>人力假设</strong>：2 名全职原型开发者（基准计划按 2 人排期）；若只有 1 人，按下方“1 人降级范围”执行——去掉 <code>batchReschedule</code> 与聊天改期，只保留单块编辑 + 单作业拆分排程 + 单步撤销。<strong>范围策略</strong>：先做透 Mac P0；云同步、多用户、真实 Schoology/Calendar、成绩计算、偏好学习闭环、<strong>完整 RRULE 重复引擎 + 按实例覆盖 + DST 全量处理、批量撤销、自由拖拽</strong>均移入路线图。
+        <strong>技术底座</strong>：个人版 Mac 桌面应用，本地运行 Codex 工具调用循环与 MCP Schedule Server，SQLite 保存日程数据。聚焦<strong>单用户本地可信闭环 + 真实 Schoology 导入</strong>：时间块模型、Mac 周日程界面、真实 Schoology（官方 API 优先/插件兜底）与手动/粘贴/fixture 导入、MVP 工具契约、确定性排程、proposal 确认与撤销。<strong>工期</strong>：基准 4 周，Week 5 为缓冲/应急（尤其当 API key 不可用、需走插件路径时启用）。<strong>人力假设</strong>：2 名全职原型开发者（基准计划按 2 人排期）；若只有 1 人，按下方“1 人降级范围”执行——去掉 <code>batchReschedule</code> 与聊天改期，只保留单块编辑 + 单作业拆分排程 + 单步撤销，Schoology 只做 API 只读导入。<strong>范围策略</strong>：先做透 Mac P0 + 真实 Schoology 作业/截止日期导入；云同步、多用户、外部日历、成绩计算、偏好学习闭环、<strong>完整 RRULE 重复引擎 + 按实例覆盖 + DST 全量处理、批量撤销、自由拖拽</strong>均移入路线图。
       </p>
       <div class="callout" style="margin-bottom:16px">
         <p>
-          <strong>Week 0 开发启动门槛（≤2 天，1 名负责人，spike 通过才进 Week 1）</strong>：跑通一个本地 <code>Codex → 单一 MCP server → 工具调用</code> spike，验证 <code>getSchedule()</code> 往返。<strong>Fallback</strong>：若 Codex 集成受阻（模型访问、系统提示词、子进程/会话管理），P0 降级为“瘦编排层直连 LLM tool-calling API + 同一套 MCP 工具”，不阻塞交付（见<a href="#s17">第 17 节</a>风险 spike 行）。
+          <strong>Week 0 开发启动门槛（≤3 天，spike 通过才进 Week 1）</strong>：①跑通本地 <code>Codex → 单一 MCP server → 工具调用</code> spike，验证 <code>getSchedule()</code> 往返；②<strong>Schoology 接入 spike</strong>：用真实账号验证能否生成个人 API key 并成功拉一次 <code>sections/{section_id}/assignments</code>——成立→走官方 API，不成立→评估插件可行性，两者都不通→本轮降级 fixture/粘贴并记为交付风险（见<a href="#s7">第 7 节</a>、<a href="#s17">第 17 节</a>）。<strong>Fallback</strong>：若 Codex 集成受阻，P0 降级为“瘦编排层直连 LLM tool-calling API + 同一套 MCP 工具”，不阻塞交付。
         </p>
         <p style="margin-top:8px">
           <strong>启动前须锁定的决策（Decisions to lock before Day 1）</strong>：
@@ -1403,7 +1407,8 @@
           ②LLM 提供方/模型 + token 预算数值 + 访问已开通；
           ③SQLite 访问层方案；
           ④MCP 工具 schema 草案（<a href="#s11">第 11 节</a>）与单一常驻 server 拓扑（<a href="#s4">第 4 节</a>）；
-          ⑤<a href="#s2">第 2 节</a>用户访谈的负责人与时间（在 Week 0 并行完成，决策规则见该节）。
+          ⑤<strong>Schoology 接入方式＝官方 API 优先、插件兜底</strong>（已锁定；Week 0 spike 定夺具体路径）；
+          ⑥<a href="#s2">第 2 节</a>用户访谈的负责人与时间（在 Week 0 并行完成，决策规则见该节）。
         </p>
       </div>
       <div class="grid">
@@ -1415,7 +1420,7 @@
             <li>建立 SQLite schema 与迁移：LocalProfile、Schedule、Block、Assignment、Message、ActionLog、ImportSource。</li>
             <li>跑通 <code>getSchedule()</code> 与 <code>createBlock(dryRun)</code> 本地 MCP 工具。</li>
             <li>创建固定周日程设置（周期承诺在规划窗口内展开为具体实例，本地墙钟，不做完整 RRULE 引擎）；支持点击编辑面板修改时间块（自由拖拽为路线图项）。</li>
-            <li><strong>手动作业输入</strong>与<strong>内置 Schoology fixture</strong>（锁定此路径，不做插件/真实 API）；把所有任务表示为时间块并持久化。<em>粘贴解析依赖 LLM，排入 Week 2。</em></li>
+            <li><strong>手动作业输入</strong>与<strong>内置 Schoology fixture</strong>（真实 Schoology 接入排入 Week 3）；把所有任务表示为时间块并持久化。<em>粘贴解析依赖 LLM，排入 Week 2。</em></li>
           </ul>
           <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：用户可手动录入 5 个作业、在周视图看到对应时间块并能通过点击面板编辑其时间；关闭应用再打开后数据仍在。</p>
         </div>
@@ -1431,20 +1436,41 @@
           <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：给定 1 个作业，端到端“拆分→排入日程→解释理由”；能响应一次自然语言改期；标记一个块未完成可把剩余工作顺延重排；新增紧急作业可生成批量重排 proposal，用户确认后原子提交并可单步撤销。</p>
         </div>
         <div class="card phase span-4">
-          <span class="tag p1">Week 3 · P1 + 收尾</span>
+          <span class="tag p0">Week 3 · P0</span>
+          <h3>真实 Schoology 集成</h3>
+          <ul>
+            <li>实现统一 <code>ImportAdapter</code> 接口；按 Week 0 spike 结论落地<strong>官方 API（OAuth 1.0a）</strong>路径，读取课程/作业/截止日期（成绩只读），token 存 Keychain。</li>
+            <li>字段映射到 <code>Assignment</code>/<code>Block</code>/<code>ImportSource</code>；按 <code>external_id</code> 去重与来源标记；错误/超时/部分失败处理与用户确认写入。</li>
+            <li>若 API key 不可用则实现<strong>浏览器插件兜底</strong>路径（读已登录页面），共用同一 adapter 契约（可能顺延到 Week 5）。</li>
+            <li>真实作业进入既有拆分/排程闭环；重复同步不产生重复块。</li>
+          </ul>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：用真实账号拉到本周真实作业与截止日期，映射为时间块、去重、可解释；断网/接口失败时降级 fixture 且不崩溃。</p>
+        </div>
+        <div class="card phase span-4">
+          <span class="tag p1">Week 4 · P1 + 收尾</span>
           <h3>集成、测试与演示</h3>
           <ul>
             <li>P0 收尾：单步撤销、错误状态、空闲时间不足、版本冲突、Mac 窗口尺寸适配。</li>
-            <li><strong>预留 20–30% 时间做测试与修 bug（不可挤占——超期时先砍下面 stretch 项，不砍测试）</strong>；打磨 UI 与演示流程。</li>
+            <li><strong>预留 20–30% 时间做测试与修 bug（不可挤占——超期时先砍下面 stretch 项，不砍测试）</strong>；打磨 UI 与演示流程；含 Schoology 导入回归。</li>
             <li><strong>演示包与分发</strong>：准备可运行的本地 Mac 演示包与限制说明；<strong>提前完成签名/公证（notarization），并在目标 Mac 上验证 Gatekeeper 放行</strong>。</li>
             <li><em>Stretch（P0 稳定后才做，可延后）</em>：P1 macOS 本地通知预览；成绩感知优先级只读示例（不实现真实计算，明确标注）。</li>
           </ul>
-          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：演示脚本全部跑通（含关闭重开持久化与撤销恢复）；关键路径有回归用例；智能体错误排程可单步撤销恢复；已签名/公证的应用可在目标 Mac 上本地启动。</p>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：演示脚本全部跑通（含真实 Schoology 导入、关闭重开持久化与撤销恢复）；关键路径有回归用例；智能体错误排程可单步撤销恢复；已签名/公证的应用可在目标 Mac 上本地启动。</p>
+        </div>
+        <div class="card phase span-4">
+          <span class="tag">Week 5 · 缓冲/应急</span>
+          <h3>缓冲周（按需启用）</h3>
+          <ul>
+            <li>吸收上游超期（尤其 Codex spike、Schoology 认证/字段映射、页面改版适配）。</li>
+            <li>API key 不可用时，在此完成<strong>浏览器插件兜底</strong>路径与测试。</li>
+            <li>补测试、修 bug、打磨演示；若一切顺利可提前结项或试做 P1 通知。</li>
+          </ul>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：Week 4 未闭合项在此收敛；真实 Schoology（API 或插件之一）导入达标或已在 Gate 记录为不可用降级。</p>
         </div>
       </div>
       <div class="callout" style="margin-top:16px">
         <p>
-          <strong>MVP Gate（go / no-go）</strong>：三周结束时按<a href="#s14">第 14 节</a>验收指标评估，决定是否继续、进入路线图哪个阶段。降级/移出 P0 的项：云同步、多用户、拖拽/拉伸、真实成绩感知计算、偏好学习闭环、Schoology 插件与官方 API、外部日历写入。
+          <strong>MVP Gate（go / no-go）</strong>：4–5 周结束时按<a href="#s14">第 14 节</a>验收指标评估（含真实 Schoology 导入门槛），决定是否继续、进入路线图哪个阶段。降级/移出 P0 的项：云同步、多用户、拖拽/拉伸、真实成绩感知计算、偏好学习闭环、外部日历写入。
         </p>
       </div>
       <div class="table" style="margin-top:16px">
@@ -1482,6 +1508,11 @@
               <td>本地数据回归</td>
               <td>SQLite 迁移、导入去重、数据导出/清空、损坏数据库时的错误提示。</td>
               <td>阻止演示包交付。</td>
+            </tr>
+            <tr>
+              <td>Schoology 集成</td>
+              <td>OAuth 认证、字段映射、<code>external_id</code> 去重、重复同步不产生重复块、接口失败/超时降级 fixture；插件路径的页面解析（如启用）。</td>
+              <td>阻止演示（真实导入为核心价值门槛，见<a href="#s14">第 14 节</a>）。</td>
             </tr>
           </tbody>
         </table>
@@ -1539,8 +1570,8 @@
           <p>导入 PDF、CSV、ICS 或复制的教学大纲，统一转成 Assignment 与 Block。</p>
         </div>
         <div class="card span-3">
-          <h3>Schoology / Calendar</h3>
-          <p>可选接入 Schoology API、浏览器插件或 Apple Calendar 只读忙闲信息。</p>
+          <h3>Schoology 深化 / Calendar</h3>
+          <p>MVP 已接入真实 Schoology 作业/截止日期；后续深化成绩/提交/事件与成绩感知计算，并可选接入 Apple Calendar 只读忙闲。</p>
         </div>
         <div class="card span-3">
           <h3>通用规划器</h3>
@@ -1573,10 +1604,10 @@
               <td>技术负责人 · 中/高 · Week 0 结束 spike 未跑通 <code>getSchedule()</code> 往返。</td>
             </tr>
             <tr>
-              <td>范围管理（3 周）</td>
-              <td>仍需在期限内交付；Mac UI、SQLite、MCP 工具、拆分质量和排程逻辑是主要工作量。</td>
-              <td>锁定 P0 最小循环：点击编辑、粘贴/fixture 导入、确定性排程、确认与单步撤销；拖拽、完整 RRULE、批量撤销、外部集成、云同步移入路线图。</td>
-              <td>项目负责人 · 高/高 · Week 1/2 DoD 未按期达成。</td>
+              <td>范围管理（4–5 周）</td>
+              <td>仍需在期限内交付；Mac UI、SQLite、MCP 工具、拆分质量、排程逻辑与真实 Schoology 接入是主要工作量。</td>
+              <td>锁定 P0 最小循环：点击编辑、真实 Schoology + fixture 导入、确定性排程、确认与单步撤销；Week 5 缓冲吸收超期；拖拽、完整 RRULE、批量撤销、外部日历、云同步移入路线图。</td>
+              <td>项目负责人 · 高/高 · Week 1–4 DoD 未按期达成。</td>
             </tr>
             <tr>
               <td>底座契合度 / 适配成本</td>
@@ -1627,10 +1658,10 @@
               <td>技术负责人 · 中/中 · 单请求 token/延迟超阈值。</td>
             </tr>
             <tr>
-              <td>Schoology 数据获取失败 / 聚合价值弱</td>
-              <td>手动录入削弱“信息聚合”价值；插件受 DOM/反爬/ToS 影响失效。</td>
-              <td>MVP 诚实定位为“验证已录入数据上的规划质量”，把聚合降为路线图；用粘贴解析降低录入摩擦；插件/API 作为升级路径且须过法评。</td>
-              <td>产品负责人 · 高/中 · 用户认为“还是要自己到处收集”。</td>
+              <td>Schoology 真实接入受阻（核心价值）</td>
+              <td>学区未开放个人 API key；插件受页面改版/DOM 影响失效——直接冲击“信息聚合”核心价值。</td>
+              <td>Week 0 spike 先验证 API key 可用性；官方 API 优先、插件兜底（同一 adapter 契约）；Week 5 缓冲吸收适配成本；两条真实路径都不通时降级 fixture/粘贴并在 Gate 记为“核心价值未验证”，不静默略过。</td>
+              <td>技术/产品负责人 · 中/高 · Week 0 spike 两条真实路径均判不可用。</td>
             </tr>
             <tr>
               <td>智能体做出差的日程安排</td>
@@ -1667,7 +1698,8 @@
         <ol>
           <li>输入固定安排：睡觉、上课、田径、健身、吃饭。</li>
           <li>（onboarding）<strong>计时冷启动</strong>：由首次使用的非开发者在目标 Mac 上，分别计时固定安排设置与录入 3 个作业，并演示粘贴解析如何降低录入成本。</li>
-          <li>导入或创建一个有截止日期和评分量规的生物纪录片作业。</li>
+          <li><strong>真实 Schoology 导入</strong>：用真实账号（官方 API 或插件路径）拉取本周真实作业与截止日期，展示映射为时间块、去重与来源标记；接口失败时演示降级到 fixture。</li>
+          <li>导入或创建一个有截止日期和评分量规的生物纪录片作业（可用 Schoology 真实作业或内置示例）。</li>
           <li>让智能体规划这个作业，展示把作业拆成规划、研究、拍摄、剪辑和复习时间块，并说明每个块为什么被安排在那里。</li>
           <li><strong>压力场景</strong>：临时新增一个紧急作业，展示智能体触发批量重排 proposal，用户确认后原子提交以消解冲突。</li>
           <li><strong>撤销</strong>：对上一步批量重排执行 undo，验证日程恢复到重排前状态。</li>
@@ -1701,6 +1733,7 @@
           <dt>REST API</dt><dd>基于 HTTP 的应用编程接口风格。</dd>
           <dt>Prompt injection</dt><dd>攻击者通过不可信输入操纵 LLM 执行非预期行为。</dd>
           <dt>ToS</dt><dd>服务条款（Terms of Service）。</dd>
+          <dt>ImportAdapter</dt><dd>统一的外部数据导入接口；官方 API、浏览器插件、fixture/粘贴均实现它，产出同一套 Assignment/Block/ImportSource 模型。</dd>
           <dt>DoD</dt><dd>完成定义（Definition of Done），任务被视为完成的可验证标准。</dd>
         </dl>
       </div>
@@ -1708,7 +1741,7 @@
 
     <div class="footer">
       <p>讨论与迭代用 HLDD 草稿。推荐 MVP 是一个个人版 Mac 桌面应用：本地日程板加智能体循环，能拆分作业、安排时间块、解释决策，并响应自然语言的日程变化。</p>
-      <p class="muted"><strong>修订记录</strong>：v0.1（2026-06）初稿；v0.2（2026-07-01）经多视角评审修订——补充成功指标、排程算法方向、数据模型字段、工具契约、循环健壮性、风险与验收，统一术语、修正架构图箭头与英文版占位说明、新增目录与术语表；v0.3（2026-07-01）明确以上游 Codex 为运行时底座、abg-agent-swarm 提供聊天 UI 参考，并据此调整范围与风险，精简市场对比章节；v0.4（2026-07-01）第二轮验证评审后收敛——统一技术底座口径与复用边界（MCP 挂工具、净新增工作显式化）、把批量重排排入周 DoD（拖拽编辑作为路线图增强项）、补充调度/并发/移动端风险、术语表补 LLM/MCP/ToS；v0.5（2026-07-01）按用户确认收敛为个人版 macOS 桌面应用——移除 SaaS/Web/多用户/运维假设，改为本地 Codex + MCP、SQLite、Mac UI、本地通知与桌面验收标准；v0.6（2026-07-01）第三轮 Agent Teams 评审（产品/架构/安全/一致性/交付五视角）后收敛——新增第 13A 节“数据外发与合规”（披露云 LLM 数据外发、未成年人同意、FERPA/COPPA、SQLite 静态保护与硬删除）；把完整 RRULE 重复+DST+按实例覆盖+批量撤销移出 P0（P0 用展开实例表示固定事件、单步撤销），修正重复事件按本地 DTSTART+时区存储的 DST 正确性；新增 Week 0 spike 门槛与“启动前须锁定的决策”清单，锁定桌面壳与人力口径、修正粘贴解析排期依赖；风险登记册加“负责人/可能性/影响/触发信号”列并补 spike/框架/bus factor/公证分发/prompt 注入风险；补 IdempotencyRecord 表、confirmationToken TTL 绑定与撤销尽力语义、依赖改硬约束；补 P0 完成态与顺延、把验收改为可判定 go/no-go 清单并加排程质量门槛；修正 二选一→三选一、拖拽/通知分级、sendMessage 确认口径、OAuth 1.0a 与修订记录一致性；v0.7（2026-07-01）按用户确认为纯个人自用项目——移除第 13A 节“数据外发、隐私与合规”及全部隐私/合规/未成年人相关内容（FERPA/COPPA、同意流、静态加密、注入合规风险行等），保留 DST/RRULE 正确性、单一 MCP 写入者、IdempotencyRecord、依赖硬约束、completeBlock、go/no-go 验收等技术收敛；补齐 §14 未标注的 GATE 项并统一撤销为“单步尽力恢复”口径。</p>
+      <p class="muted"><strong>修订记录</strong>：v0.1（2026-06）初稿；v0.2（2026-07-01）经多视角评审修订——补充成功指标、排程算法方向、数据模型字段、工具契约、循环健壮性、风险与验收，统一术语、修正架构图箭头与英文版占位说明、新增目录与术语表；v0.3（2026-07-01）明确以上游 Codex 为运行时底座、abg-agent-swarm 提供聊天 UI 参考，并据此调整范围与风险，精简市场对比章节；v0.4（2026-07-01）第二轮验证评审后收敛——统一技术底座口径与复用边界（MCP 挂工具、净新增工作显式化）、把批量重排排入周 DoD（拖拽编辑作为路线图增强项）、补充调度/并发/移动端风险、术语表补 LLM/MCP/ToS；v0.5（2026-07-01）按用户确认收敛为个人版 macOS 桌面应用——移除 SaaS/Web/多用户/运维假设，改为本地 Codex + MCP、SQLite、Mac UI、本地通知与桌面验收标准；v0.6（2026-07-01）第三轮 Agent Teams 评审（产品/架构/安全/一致性/交付五视角）后收敛——新增第 13A 节“数据外发与合规”（披露云 LLM 数据外发、未成年人同意、FERPA/COPPA、SQLite 静态保护与硬删除）；把完整 RRULE 重复+DST+按实例覆盖+批量撤销移出 P0（P0 用展开实例表示固定事件、单步撤销），修正重复事件按本地 DTSTART+时区存储的 DST 正确性；新增 Week 0 spike 门槛与“启动前须锁定的决策”清单，锁定桌面壳与人力口径、修正粘贴解析排期依赖；风险登记册加“负责人/可能性/影响/触发信号”列并补 spike/框架/bus factor/公证分发/prompt 注入风险；补 IdempotencyRecord 表、confirmationToken TTL 绑定与撤销尽力语义、依赖改硬约束；补 P0 完成态与顺延、把验收改为可判定 go/no-go 清单并加排程质量门槛；修正 二选一→三选一、拖拽/通知分级、sendMessage 确认口径、OAuth 1.0a 与修订记录一致性；v0.7（2026-07-01）按用户确认为纯个人自用项目——移除第 13A 节“数据外发、隐私与合规”及全部隐私/合规/未成年人相关内容（FERPA/COPPA、同意流、静态加密、注入合规风险行等），保留 DST/RRULE 正确性、单一 MCP 写入者、IdempotencyRecord、依赖硬约束、completeBlock、go/no-go 验收等技术收敛；补齐 §14 未标注的 GATE 项并统一撤销为“单步尽力恢复”口径；v0.8（2026-07-01）按用户确认<strong>把真实 Schoology 接入纳入 MVP</strong>——接入方式官方 API（OAuth 1.0a）优先、浏览器插件兜底，归一到统一 <code>ImportAdapter</code>（产出同一套 Assignment/Block/ImportSource）；工期由 3 周扩为 4–5 周，新增 Week 3“真实 Schoology 集成”Phase 与 Week 5 缓冲/应急，Week 0 增加 Schoology 接入 spike；成绩只读导入、成绩感知计算仍为路线图；相应更新 §1/§3/§4/§7/§12/§14/§16/§17/§18 与验收门槛（新增“真实 Schoology 导入”GATE，含 API/插件均不可用时降级并记录的例外）。</p>
     </div>
   </main>
 </body>
