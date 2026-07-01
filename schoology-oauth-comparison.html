@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schoology OAuth 认证场景对比</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --surface-soft: #eef3f8;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #d8e0ea;
+      --accent: #006a71;
+      --accent-strong: #004f55;
+      --blue: #2357a6;
+      --green: #24744d;
+      --warn: #9a5c00;
+      --shadow: 0 18px 50px rgba(20, 33, 61, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(0, 106, 113, 0.08), rgba(247, 248, 251, 0) 360px),
+        var(--bg);
+    }
+
+    a {
+      color: var(--accent-strong);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 56px 0 32px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 16px;
+      color: var(--accent-strong);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 4.25rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 820px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+    }
+
+    main {
+      padding-bottom: 56px;
+    }
+
+    section {
+      margin: 28px 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .statement {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .identity-box {
+      min-height: 150px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff, var(--surface-soft));
+    }
+
+    .identity-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--surface);
+      background: var(--accent);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .identity-box.two .identity-label {
+      background: var(--blue);
+    }
+
+    .identity-box p {
+      margin-bottom: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 15px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: #293548;
+      background: #eef3f8;
+      font-size: 0.92rem;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .flows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      position: relative;
+      padding: 14px 14px 14px 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .step::before {
+      content: attr(data-step);
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .panel.two .step::before {
+      background: var(--blue);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .scenario {
+      min-height: 190px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .tag.two {
+      background: var(--blue);
+    }
+
+    .tag.mix {
+      background: var(--warn);
+    }
+
+    ul {
+      margin: 10px 0 0;
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+
+    .note {
+      border-left: 4px solid var(--green);
+      background: #eef7f2;
+      padding: 16px 18px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .product-fit {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .verdict {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      padding: 6px 12px;
+      color: #fff;
+      background: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .path-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .path-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px 16px;
+    }
+
+    .path-item strong {
+      color: var(--accent-strong);
+    }
+
+    .path-item.two strong {
+      color: var(--blue);
+    }
+
+    .admin-checklist {
+      counter-reset: admin;
+      display: grid;
+      gap: 12px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .admin-checklist li {
+      counter-increment: admin;
+      position: relative;
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 15px 16px 15px 54px;
+    }
+
+    .admin-checklist li::before {
+      content: counter(admin);
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .admin-checklist p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .message-draft {
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f4f6f9;
+      padding: 16px;
+    }
+
+    .decision {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .decision-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .answer {
+      white-space: nowrap;
+      color: #fff;
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: var(--accent);
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+
+    .answer.two {
+      background: var(--blue);
+    }
+
+    .refs {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    code {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1px 5px;
+      background: #f4f6f9;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.94em;
+    }
+
+    footer {
+      padding: 20px 0 44px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 820px) {
+      .summary,
+      .statement,
+      .flows,
+      .cards,
+      .product-fit {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 40px;
+      }
+
+      .panel,
+      .scenario {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 22px, 1120px);
+      }
+
+      header {
+        padding: 30px 0 20px;
+      }
+
+      section {
+        margin: 22px 0;
+      }
+
+      .decision-row {
+        grid-template-columns: 1fr;
+      }
+
+      .answer {
+        width: fit-content;
+        white-space: normal;
+      }
+
+      th,
+      td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="kicker">Schoology API Authentication</p>
+      <h1>Three-Legged OAuth 与 Two-Legged OAuth 的应用场景区别</h1>
+      <p class="lead">
+        两者的关键区别不是“哪个能调用更多接口”，而是每次 API 请求到底代表谁：
+        Three-Legged OAuth 代表某个授权用户，Two-Legged OAuth 代表 API key 所属的账号、管理员或机构集成身份。
+        对学生个人自用的本地 Mac 桌面应用，优先验证 Two-Legged / Personal API key 是否可用。
+      </p>
+    </header>
+
+    <main>
+      <section class="summary" aria-label="核心结论">
+        <article class="panel">
+          <h2>核心结论</h2>
+          <p>
+            Schoology 的 OAuth 1.0 认证把“应用身份”和“用户权限”拆开处理。
+            <code>consumer_key</code> 识别应用或 API 使用方；在三方 OAuth 中，
+            <code>oauth_token</code> 进一步识别具体授权用户。
+          </p>
+          <p>
+            所以实际能访问哪些学生、课程、班级、成绩或用户资料，通常取决于被代表的用户在 Schoology 中的角色、学校、楼宇和课程上下文。
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>一句话区分</h2>
+          <div class="statement">
+            <div class="identity-box">
+              <span class="identity-label">Three-Legged</span>
+              <p>用户授权型。适合第三方应用代表当前登录用户访问其有权限访问的数据。</p>
+            </div>
+            <div class="identity-box two">
+              <span class="identity-label">Two-Legged</span>
+              <p>系统集成型。适合学校、管理员或后台系统代表自己访问 API。</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section aria-label="对比表">
+        <h2>对比表</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>Three-Legged OAuth</th>
+                <th>Two-Legged OAuth</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>请求代表谁</td>
+                <td>某个具体 Schoology 用户</td>
+                <td>API key 所属用户、管理员或机构集成身份</td>
+              </tr>
+              <tr>
+                <td>是否需要用户跳转授权</td>
+                <td>需要。用户需要批准应用访问自己的 Schoology 数据。</td>
+                <td>不需要。通常由服务端后台直接签名请求。</td>
+              </tr>
+              <tr>
+                <td>OAuth 字段含义</td>
+                <td><code>consumer_key</code> 代表应用，<code>oauth_token</code> 代表授权用户。</td>
+                <td><code>consumer_key</code> 代表 API 使用方，<code>oauth_token</code> 为空字符串。</td>
+              </tr>
+              <tr>
+                <td>权限边界</td>
+                <td>跟随授权用户本身的权限。</td>
+                <td>跟随 API key 所属账号的角色和 API 权限。</td>
+              </tr>
+              <tr>
+                <td>典型使用者</td>
+                <td>学生工具、教师插件、家长应用、嵌入式第三方应用。</td>
+                <td>SIS 同步、学校后台脚本、管理员报表、定时任务、个人本地脚本或桌面应用。</td>
+              </tr>
+              <tr>
+                <td>失效处理</td>
+                <td>用户可撤销授权；OAuth1 access token 最长 90 天，需要重新授权。</td>
+                <td>key 仍需按 OAuth1 规则签名；权限不足时返回 401 或 403。</td>
+              </tr>
+              <tr>
+                <td>对本地 Mac 个人应用的适配度</td>
+                <td>需要创建 Schoology developer app、配置回调 URL，通常更适合产品化或多用户正式应用。</td>
+                <td>更直接。只要学生账号允许获取 API credentials，就能代表自己读取自己可见的数据。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="product-fit" aria-label="学生个人 Mac 应用建议">
+        <article class="panel">
+          <span class="verdict">当前产品形态首选：Two-Legged / Personal API key</span>
+          <h2>学生个人 Mac 桌面应用怎么选</h2>
+          <p>
+            如果应用是学生自己开发、自己在本机使用的 macOS 桌面应用，并且目标只是读取自己的课程、作业、截止日期和成绩只读信息，
+            那么它更接近“个人 API 使用方访问自己的数据”，不是“一个第三方 SaaS 代表很多用户访问数据”。
+          </p>
+          <p>
+            因此首选路径是先验证学生账号是否能获取个人 API credentials，然后用 Two-Legged OAuth 调用 Schoology API。
+            这个判断的前提是学校或学区允许该学生角色使用 <code>Access Schoology API</code> 权限。
+          </p>
+        </article>
+
+        <article class="panel">
+          <h2>为什么不是优先 Three-Legged</h2>
+          <p>
+            Three-Legged OAuth 通常需要创建 Schoology developer app，提供可访问的 App URL、登录或回调配置，并处理用户跳转授权。
+            这更适合嵌入 Schoology、安装到 Schoology App Center，或服务多个学生的正式应用。
+          </p>
+          <p>
+            单纯本地运行的 Mac 应用没有天然的公网回调服务，也不需要多用户授权体系，所以把 Three-Legged 作为后续产品化路径更合理。
+          </p>
+        </article>
+      </section>
+
+      <section class="panel" aria-label="凭据来源和验证路径">
+        <h2>凭据来源与验证路径</h2>
+        <div class="path-list">
+          <div class="path-item two">
+            <strong>首选验证：个人 API key / Two-Legged OAuth</strong>
+            <p>
+              学生登录自己的 Schoology 账号后，先检查账号设置、API 或 Integration 相关入口是否能生成
+              <code>consumer_key</code> 和 <code>consumer_secret</code>。如果可以，就把密钥存入 macOS Keychain，
+              请求时令 <code>oauth_token</code> 为空字符串，并只读取学生本人有权限访问的数据。
+            </p>
+          </div>
+          <div class="path-item">
+            <strong>产品化路径：developer app / Three-Legged OAuth</strong>
+            <p>
+              如果未来要做成正式 Schoology App，或给多个学生使用，则需要创建 Schoology developer app。
+              创建后可在 App Profile 的 <code>Options</code> -> <code>API Info</code> 获取 OAuth 1.0 credentials；
+              每个学生再通过授权流程产生自己的 <code>oauth_token</code> 和 <code>oauth_token_secret</code>。
+            </p>
+          </div>
+          <div class="path-item">
+            <strong>兜底路径：浏览器插件或粘贴导入</strong>
+            <p>
+              如果学校没有开放学生个人 API key，且创建 developer app 的权限也不可用，可以考虑读取学生已经登录并可见的 Schoology 页面，
+              或保留粘贴/fixture 导入作为降级方案。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Two-Legged OAuth 管理员确认清单">
+        <h2>Two-Legged OAuth 管理员确认清单</h2>
+        <p>
+          目标说明：学生自己开发一个本地 macOS 桌面应用，只读取该学生本人在 Schoology 中已经有权限看到的信息，
+          例如课程、作业、截止日期、事件和成绩只读信息；不访问其他学生数据，也不修改 Schoology 数据。
+          这里要向管理员确认的是 <strong>Two-Legged OAuth / Personal API key</strong> 是否可用，不是申请 Schoology developer app 或 Three-Legged OAuth。
+        </p>
+        <ol class="admin-checklist">
+          <li>
+            <strong>是否允许学生账号使用 Schoology API</strong>
+            <p>
+              请确认学生角色是否可以启用 <code>Access Schoology API</code> 权限。如果不能给全部学生开放，
+              是否可以给一个测试学生账号或测试角色临时开放。
+            </p>
+          </li>
+          <li>
+            <strong>学生是否可以生成自己的 Personal API key</strong>
+            <p>
+              请确认学生登录 Schoology 后，是否能生成该学生自己的 <code>consumer_key</code> 和
+              <code>consumer_secret</code>。这应该是用于 Two-Legged OAuth 的学生个人 key，不是学校管理员 key，也不是全校 integration key。
+            </p>
+          </li>
+          <li>
+            <strong>API key 的获取入口</strong>
+            <p>
+              请管理员提供本校 Schoology 中生成个人 API key 的具体路径。不同学区配置可能不同，
+              入口可能在 API、Integration 或账号相关页面。
+            </p>
+          </li>
+          <li>
+            <strong>确认这个 key 的权限边界</strong>
+            <p>
+              请确认该学生 personal API key 是否只能访问该学生本人可见的数据；是否允许读取
+              <code>users/me</code>、学生加入的 courses / sections、section assignments、due dates / calendar events，
+              以及 grades 只读信息；是否禁止访问其他学生、老师或全校 roster 数据。
+            </p>
+          </li>
+          <li>
+            <strong>确认 Two-Legged OAuth 是否可用于学生 personal key</strong>
+            <p>
+              应用会使用 OAuth 1.0a Two-Legged 方式：<code>oauth_consumer_key</code> 使用学生自己的 consumer key，
+              <code>oauth_token</code> 为空字符串，每次请求重新生成 <code>oauth_nonce</code> 和
+              <code>oauth_timestamp</code>。请确认本校没有禁用这种 personal API key 使用方式。
+            </p>
+          </li>
+          <li>
+            <strong>确认 API Base URL / Schoology 域名</strong>
+            <p>
+              请提供本校 Schoology 域名，并确认 API 请求应该使用的 base URL。如果本校有自定义域名、SSO 或特殊网关，
+              也请说明是否会影响 API 调用。
+            </p>
+          </li>
+          <li>
+            <strong>确认是否有测试账号或测试课程</strong>
+            <p>
+              如果不方便直接用真实学生账号测试，请提供一个测试学生账号。测试账号最好加入一个测试课程，
+              并包含几个 assignments / due dates，方便验证 API 能否正常读取。
+            </p>
+          </li>
+          <li>
+            <strong>确认安全要求</strong>
+            <p>
+              学生应用会把 <code>consumer_secret</code> 存在 macOS Keychain，不写进源码、不放进 SQLite、不上传到云端。
+              如果 key 泄露，请确认学生或管理员是否可以 revoke / regenerate key，并确认学校是否允许学生个人本地应用保存自己的 API credentials。
+            </p>
+          </li>
+          <li>
+            <strong>确认使用限制</strong>
+            <p>
+              请确认是否有 API 调用频率限制，是否允许本地应用定时同步，例如每 15 分钟、30 分钟或手动同步；
+              也请确认是否禁止浏览器插件读取学生已经能看到的 Schoology 页面，作为 API 不可用时的兜底方案。
+            </p>
+          </li>
+          <li>
+            <strong>确认 2025 年后的 Personal API key 限制</strong>
+            <p>
+              Schoology 更新说明提到 Personal API keys 不能访问其他用户数据。这个应用只访问学生本人数据，
+              请管理员确认这种用途是否被允许。如果 personal key 调用自己的课程或作业也返回 <code>401</code>，
+              需要判断是权限未开、key 类型不对，还是学校策略禁用了学生 API。
+            </p>
+          </li>
+        </ol>
+        <div class="message-draft">
+          <h3>可直接发给管理员的简短说明</h3>
+          <p>
+            我想开发一个只给自己使用的本地 macOS 桌面应用，用来读取我自己在 Schoology 里已经能看到的课程、作业、截止日期和成绩只读信息。
+            计划采用 Schoology OAuth 1.0a <strong>Two-Legged OAuth / Personal API key</strong> 方式。请问学生角色是否可以启用
+            <code>Access Schoology API</code> 权限，并生成我自己的 personal
+            <code>consumer_key</code> / <code>consumer_secret</code>？
+          </p>
+          <p>
+            应用只访问我自己的数据，不访问其他学生数据，也不会修改 Schoology 内容。请求中 <code>oauth_token</code> 会按 Two-Legged OAuth 要求传空字符串。
+            如果学生角色不能生成 personal API key，是否可以提供测试账号、临时测试权限，或说明学校是否禁止这种 API 使用方式？
+          </p>
+        </div>
+      </section>
+
+      <section class="flows" aria-label="认证流程">
+        <article class="panel">
+          <h2>Three-Legged OAuth 流程</h2>
+          <p>适合“一个应用服务很多用户，每个用户只授权访问自己权限范围内的数据”。</p>
+          <div class="flow">
+            <div class="step" data-step="1">应用识别当前 Schoology 用户。</div>
+            <div class="step" data-step="2">检查是否已有该用户的 access token。</div>
+            <div class="step" data-step="3">没有 token 时请求 <code>/oauth/request_token</code>。</div>
+            <div class="step" data-step="4">跳转用户到 <code>/oauth/authorize</code> 批准授权。</div>
+            <div class="step" data-step="5">回调后用 request token 换 access token。</div>
+            <div class="step" data-step="6">用 access token 代表该用户调用 API。</div>
+          </div>
+        </article>
+
+        <article class="panel two">
+          <h2>Two-Legged OAuth 流程</h2>
+          <p>适合“没有前台用户点击授权，而是后台系统或管理员集成访问 API”。</p>
+          <div class="flow">
+            <div class="step" data-step="1">管理员或有权限角色获取 API consumer key。</div>
+            <div class="step" data-step="2">服务端保存 consumer key 和 consumer secret。</div>
+            <div class="step" data-step="3">每次请求生成新的 nonce 和 timestamp。</div>
+            <div class="step" data-step="4">把 <code>oauth_token</code> 设置为空字符串。</div>
+            <div class="step" data-step="5">生成 OAuth1 签名并发送 API 请求。</div>
+            <div class="step" data-step="6">Schoology 根据该 key 所属身份判断权限。</div>
+          </div>
+        </article>
+      </section>
+
+      <section aria-label="典型应用场景">
+        <h2>典型应用场景</h2>
+        <div class="cards">
+          <article class="scenario">
+            <span class="tag">Three-Legged</span>
+            <h3>老师教学工具</h3>
+            <p>
+              老师打开第三方教学插件，插件读取老师自己教授的班级、学生名单、作业或课程材料。
+              应用不能天然越过老师账号本身的权限边界。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag">Three-Legged</span>
+            <h3>学生或家长应用</h3>
+            <p>
+              学生授权后查看自己的课程、作业和成绩；家长授权后查看与孩子相关的信息。
+              权限跟随当前授权用户，而不是应用想看什么就能看什么。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag two">Two-Legged</span>
+            <h3>学生个人 Mac 应用</h3>
+            <p>
+              学生自己开发并在本机运行的日程助手，只读取自己的课程、作业和截止日期。
+              如果学生账号能生成个人 API key，这条路径最直接。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag two">Two-Legged</span>
+            <h3>SIS 或教务系统同步</h3>
+            <p>
+              学校后台系统定时创建用户、更新学生资料、同步课程、处理注册关系或停用离校学生。
+              这类任务通常不适合让每个用户逐个授权。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag two">Two-Legged</span>
+            <h3>管理员报表和导出</h3>
+            <p>
+              学校管理员脚本或内部报表系统批量拉取全校数据。
+              是否能看到全校，取决于 key 所属账号是否具备 school-wide admin 等权限。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag mix">需要谨慎</span>
+            <h3>跨学校第三方 SaaS</h3>
+            <p>
+              如果第三方应用要访问其他学校的用户数据，还会受到 Schoology App Center 审批和跨学校访问限制影响。
+              未批准应用可能收到 401。
+            </p>
+          </article>
+
+          <article class="scenario">
+            <span class="tag mix">权限问题</span>
+            <h3>只查看某个学生</h3>
+            <p>
+              这通常不是 key 自身配置了“只读某学生”的 scope，而是请求所代表的用户本来只对该学生有访问权。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="选择建议">
+        <h2>如何选择</h2>
+        <div class="decision">
+          <div class="decision-row">
+            <div>应用是否面向很多 Schoology 用户，并且需要按当前用户权限访问数据？</div>
+            <span class="answer">Three-Legged</span>
+          </div>
+          <div class="decision-row">
+            <div>是否需要用户明确批准第三方应用访问自己的数据？</div>
+            <span class="answer">Three-Legged</span>
+          </div>
+          <div class="decision-row">
+            <div>是否是学生自己开发、自己在本机使用、只访问自己 Schoology 信息的 Mac 桌面应用？</div>
+            <span class="answer two">Two-Legged</span>
+          </div>
+          <div class="decision-row">
+            <div>是否是学校自己的后台系统、SIS、定时任务或管理员脚本？</div>
+            <span class="answer two">Two-Legged</span>
+          </div>
+          <div class="decision-row">
+            <div>是否需要批量创建、更新、停用用户或同步课程注册关系？</div>
+            <span class="answer two">Two-Legged</span>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="注意事项">
+        <h2>实现注意事项</h2>
+        <div class="note">
+          <p>
+            Schoology 的权限判断不是单纯由 API key 上的细粒度 scope 决定，而是由 OAuth 身份、用户角色、学校或楼宇范围、课程或班级上下文，以及应用审批状态共同决定。
+          </p>
+          <ul>
+            <li>遇到 403，通常表示当前身份没有权限执行该操作。</li>
+            <li>遇到 401，可能是 token 过期、签名错误、nonce/timestamp 重复，或应用访问范围不被允许。</li>
+            <li>OAuth1 access token 最长有效期为 90 天，过期后需要重新授权。</li>
+            <li>Personal API keys 不能访问其他用户数据；跨学校访问需要关注 Schoology 的审批要求。</li>
+            <li>学生本地应用不要把 <code>consumer_secret</code> 写进前端源码或公开仓库；在 macOS 上应使用 Keychain 保存。</li>
+            <li>如果学生角色没有 <code>Access Schoology API</code> 权限，Two-Legged 路径会被学校策略阻断，需要切换到插件、粘贴或正式 developer app 路径。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="参考链接">
+        <h2>参考文档</h2>
+        <div class="refs">
+          <a href="https://developers.schoology.com/api-documentation/authentication/">Schoology Authentication</a>
+          <a href="https://developers.schoology.com/api-documentation/important-api-authentication-update/">Important OAuth/API Authentication Update</a>
+          <a href="https://developers.schoology.com/api-documentation/design-architecture/">Schoology Design &amp; Architecture</a>
+          <a href="https://developers.schoology.com/api-documentation/rest-api-v1/user/">Schoology User API</a>
+          <a href="https://developers.schoology.com/api-documentation/rest-api-v1/role/">Schoology Role API</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      本文档根据 Schoology 官方 OAuth 认证文档和前文分析整理，适合在桌面端和手机浏览器中阅读。
+    </footer>
+  </div>
+</body>
+</html>
