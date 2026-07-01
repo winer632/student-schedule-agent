@@ -456,15 +456,15 @@
         </p>
         <div class="meta">
           <span class="pill">原型周期：3 周</span>
-          <span class="pill">核心用户：高中生</span>
-          <span class="pill">主要集成：Schoology</span>
-          <span class="pill">技术底座：OpenAI Codex + abg-agent-swarm</span>
+          <span class="pill">平台：macOS 桌面应用</span>
+          <span class="pill">MVP 数据：本地 / 粘贴 / 模拟</span>
+          <span class="pill">技术底座：本地 Codex + MCP 工具</span>
         </div>
         <div class="doc-info table" style="margin-top:20px">
           <table style="min-width:0">
             <caption>文档元信息</caption>
             <tbody>
-              <tr><th scope="row">版本</th><td>v0.4（草稿）</td><th scope="row">状态</th><td>评审通过 / 可启动开发</td></tr>
+              <tr><th scope="row">版本</th><td>v0.5（Agent Teams 评审修订）</td><th scope="row">状态</th><td>评审通过 / 可启动 Mac 桌面 P0 开发</td></tr>
               <tr><th scope="row">创建日期</th><td>2026-06</td><th scope="row">最近更新</th><td>2026-07-01</td></tr>
               <tr><th scope="row">负责人</th><td>产品与工程原型小组</td><th scope="row">读者</th><td>产品、工程评审</td></tr>
             </tbody>
@@ -493,7 +493,7 @@
         <li><a href="#s10">消息抽象层</a></li>
         <li><a href="#s11">智能体工具</a></li>
         <li><a href="#s12">数据模型</a></li>
-        <li><a href="#s13">智能体安全与可控性</a></li>
+        <li><a href="#s13">智能体可控性</a></li>
         <li><a href="#s14">成功指标与验收标准</a></li>
         <li><a href="#s15">三周 MVP 计划</a></li>
         <li><a href="#s16">长期路线图</a></li>
@@ -522,12 +522,32 @@
           </p>
         </div>
       </div>
+      <div class="grid" style="margin-top:16px">
+        <div class="card span-6">
+          <span class="tag p0">目标用户</span>
+          <h3>主要 persona</h3>
+          <ul>
+            <li>使用 MacBook 完成学习管理的高中生，通常会从 Schoology、教学大纲、PDF 或老师公告中查看作业。</li>
+            <li>同时有 AP/荣誉课程、体育训练、社团或家庭安排，希望在电脑上集中规划本周任务。</li>
+            <li>已有基础日历或待办使用习惯，但需要帮助把作业拆解、安排到可用时间，并在计划被打乱后重排。</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <span class="tag">边界</span>
+          <h3>非目标 persona 与数据限制</h3>
+          <ul>
+            <li>MVP 是单用户 Mac 桌面应用，不服务家长端、老师端、学校管理员端，也不做班级级数据分析或多人协作。</li>
+            <li>不做云账号、不做多设备同步、不做 Web/SaaS 管理后台。</li>
+            <li>数据默认保存在用户本机；Schoology 真实 API、浏览器插件和外部日历同步均为后续路线图。</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section id="s2">
       <h2>2. 要解决的问题</h2>
       <p class="muted">
-        以下问题陈述目前基于团队假设，尚未经过系统性用户研究验证。<strong>MVP 前置动作</strong>：对 5–10 名目标高中生做轻量访谈，确认核心痛点究竟是“不知道何时学”（规划问题）还是“知道却做不到”（执行力/拖延问题）——二者对应的产品形态差异很大。
+        以下问题陈述目前基于团队假设。<strong>开发前置确认</strong>：用 3–5 名目标学生做轻量访谈或演示反馈，确认核心痛点究竟是“不知道何时学”（规划问题）还是“知道却做不到”（执行力/拖延问题）。若反馈显示规划不是主要痛点，P0 仍可作为桌面原型开发，但演示目标要改为验证“桌面集中排程”而不是证明产品市场需求。
       </p>
       <div class="grid">
         <div class="card span-4">
@@ -563,7 +583,7 @@
             <li>创建一个主周日程，合并固定安排与学校任务。</li>
             <li>支持手动录入或粘贴作业信息；提供模拟 Schoology 数据。</li>
             <li>根据作业描述和评分量规，把大型任务拆成更小的工作块。</li>
-            <li>允许用户手动拖动、拉伸、删除和编辑时间块。</li>
+            <li>允许用户通过点击编辑面板创建、移动、删除和编辑时间块；自由拖动/拉伸为 P1 增强项。</li>
             <li>允许用户用自然语言和智能体对话，例如“我周六下午 5–8 点要出去”。</li>
             <li>解释每个时间块为什么被安排在那里，并显示不确定性。</li>
           </ul>
@@ -571,6 +591,7 @@
           <ul>
             <li>随着使用学习偏好，例如“我喜欢跑步后做数学”（MVP 仅做记录，不做可信学习闭环）。</li>
             <li>成绩感知优先级估算（MVP 以只读示例演示，不承诺真实计算，见<a href="#s9">第 9 节</a>）。</li>
+            <li>macOS 本地通知、自由拖拽/拉伸、菜单栏快速录入、导入 Apple Calendar 忙闲信息。</li>
             <li>在可行时从 Schoology 官方 API 导入作业、截止日期、活动和成绩。</li>
           </ul>
         </div>
@@ -580,12 +601,12 @@
           <ul>
             <li><strong>渠道</strong>：不做非官方的个人微信、Instagram、Snapchat 机器人集成（官方渠道属未来路线图，见<a href="#s16">第 16 节</a>）。</li>
             <li><strong>能力</strong>：不自动提交作业或修改成绩；不承诺精确预测 GPA（平均学分绩点）；不在没有用户确认的情况下做重大计划变更。</li>
-            <li><strong>依赖</strong>：MVP 不依赖学校管理员批准 API 权限，也不依赖浏览器插件抓取。</li>
+            <li><strong>依赖</strong>：MVP 不依赖学校管理员批准 API 权限，不依赖浏览器插件抓取，也不建立真实 Schoology 或外部日历网络连接。</li>
             <li><strong>用户范围</strong>：不做家长端 / 老师端，不做多人协作与小组作业协同。</li>
-            <li><strong>平台</strong>：不做移动原生 App；MVP 为网页应用（移动端策略见下方说明）。</li>
+            <li><strong>平台</strong>：不做 SaaS、不做 Web 应用、不做移动 App；MVP 是个人版 macOS 桌面应用。</li>
           </ul>
           <p class="muted" style="font-size:0.92rem;margin-top:8px">
-            移动端说明：高中生是移动优先人群，桌面网页形态可能与实际使用环境错配。MVP 采用<strong>响应式网页</strong>以在手机浏览器可用，原生 App 列入路线图；此风险在<a href="#s17">第 17 节</a>登记。
+            桌面端说明：MVP 明确选择 Mac 桌面形态，优先服务“坐在电脑前做作业和规划”的使用场景；移动端、云同步和多设备体验不进入本轮设计。
           </p>
         </div>
       </div>
@@ -594,57 +615,101 @@
     <section id="s4">
       <h2>4. 高层架构</h2>
       <p class="muted">
-        系统设计的关键是：智能体可以接入多个数据来源和多个消息渠道，但核心日程模型保持稳定。下图三层之间为数据/调用流向。
+        系统设计的关键是：这是一个个人版 Mac 桌面应用。所有核心状态默认保存在本机，智能体和日程工具以本地进程运行；未来外部集成以可选 adapter 接入，但不改变核心日程模型。
       </p>
       <div class="architecture">
         <div class="arch-box">
-          <h3>客户端层</h3>
-          <p>学生查看和编辑计划的地方。</p>
+          <h3>macOS 应用层</h3>
+          <p>学生查看、编辑和确认计划的地方。</p>
           <ul>
-            <li>响应式网页日程板</li>
+            <li>SwiftUI / Tauri / Electron 桌面壳（二选一，Week 1 锁定）</li>
+            <li>周日程板与点击编辑面板</li>
             <li>应用内聊天</li>
-            <li>拖拽式日历界面</li>
-            <li>应用内提醒（MVP）</li>
-            <li>可选浏览器插件（路线图）</li>
+            <li>proposal 确认、撤销、错误提示</li>
+            <li>macOS 本地通知（P1）</li>
+            <li>菜单栏快速录入（路线图）</li>
           </ul>
         </div>
         <div class="arrow" aria-hidden="true">→</div>
         <div class="arch-box">
-          <h3>后端与智能体层</h3>
-          <p>推理与编排发生的地方。</p>
+          <h3>本地智能体层</h3>
+          <p>推理、排程和工具调用发生的地方。</p>
           <ul>
-            <li>Codex app-server（智能体运行时 + 工具调用循环）</li>
-            <li>身份认证与授权（会话、多用户隔离）</li>
+            <li>本地 Codex Runtime（智能体运行时 + 工具调用循环）</li>
+            <li>本地 MCP Schedule Server（日程工具、排程器、校验器）</li>
             <li>LLM 推理服务（模型、上下文/记忆、成本预算）</li>
-            <li>日程状态存储（持久化 + 版本/乐观并发）</li>
-            <li>调度引擎（定时提醒、重排触发）</li>
-            <li>日程工具 / Schoology 导入工具 / 偏好记忆</li>
-            <li>消息抽象层 · 可观测性（日志/追踪/评估）</li>
+            <li>确定性排程器与约束校验器</li>
+            <li>本地提醒调度器（P1）</li>
+            <li>轻量日志与本机调试面板</li>
           </ul>
         </div>
         <div class="arrow" aria-hidden="true">→</div>
         <div class="arch-box">
-          <h3>集成层</h3>
-          <p>应用可以读取或写入的外部系统。</p>
+          <h3>本地数据与集成层</h3>
+          <p>本机持久化与可选外部数据来源。</p>
           <ul>
-            <li>Schoology 官方 API（OAuth 1.0）或插件导入</li>
-            <li>Apple / Google Calendar（双向同步）</li>
-            <li>未来的邮件或短信</li>
-            <li>未来的官方微信或其他消息平台</li>
-            <li>数据库</li>
+            <li>SQLite 本地数据库</li>
+            <li>用户手动输入、粘贴解析、内置 Schoology fixture</li>
+            <li>本地文件导入：PDF / 文本 / CSV（路线图）</li>
+            <li>Apple Calendar 只读忙闲导入（路线图）</li>
+            <li>Schoology API 或浏览器插件导入（路线图）</li>
           </ul>
         </div>
       </div>
       <div class="callout" style="margin-top:16px">
         <p>
-          <strong>技术底座与复用边界</strong>：智能体运行时基于<strong>最新上游 OpenAI Codex</strong>（<code>openai/codex</code>，含 Rust 核心 <code>codex-rs</code>、Codex SDK 与 app-server），仅复用其<strong>“LLM → 工具 → 结果”的工具调用循环机制</strong>；<strong>聊天 UI 与 OAuth 集成</strong>复用 <code>abg-agent-swarm</code>（Drive Master）的现成实现与模式。日程相关的自定义工具<strong>经 MCP server 暴露给 Codex 调用，尽量不 fork codex-rs 核心</strong>。
+          <strong>技术底座与复用边界</strong>：智能体运行时基于本地运行的 <code>openai/codex</code> 工具调用循环；日程相关能力通过本地 MCP server 暴露给 Codex 调用，不 fork <code>codex-rs</code> 核心。<code>abg-agent-swarm</code> 只作为聊天 UI 和工具编排模式参考，不把它的 Web/OAuth/多用户形态作为本项目默认架构。
         </p>
         <p>
-          需要说明的是，Codex 本质是<strong>单用户编码智能体</strong>，因此<strong>多用户会话隔离、领域数据持久化、调度引擎（定时提醒）属于本项目的净新增工作量</strong>，非底座自带。本项目还需新增学校日程特定部分：时间块模型、拖拽日历界面、Schoology 导入工具与日程工具。底座省去的是运行时循环与前端骨架，但上述封装仍需投入（见<a href="#s17">第 17 节</a>风险）。
+          需要说明的是，Codex 本质是单用户智能体，这与个人版 Mac 应用匹配；本项目不需要 SaaS 多用户会话隔离、云后端或运维体系。净新增工作量集中在时间块模型、Mac 周日程界面、SQLite 持久化、粘贴/fixture 导入、本地 MCP 工具与确定性排程器。
         </p>
       </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>本地运行时边界与职责</caption>
+          <thead>
+            <tr>
+              <th scope="col">组件</th>
+              <th scope="col">职责</th>
+              <th scope="col">实现约束</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mac Desktop App</td>
+              <td>提供周视图、作业录入、聊天、确认弹窗、撤销入口和本地设置。</td>
+              <td>所有用户交互先生成本地 action/proposal，再进入工具层提交。</td>
+            </tr>
+            <tr>
+              <td>Local Codex Runtime</td>
+              <td>维护单用户 LLM 工具调用循环，生成子任务候选、解释和澄清问题。</td>
+              <td>只调用 allowlist MCP 工具；不直接改 SQLite。</td>
+            </tr>
+            <tr>
+              <td>MCP Schedule Server</td>
+              <td>承载日程工具、排程器、校验器、事务提交和撤销。</td>
+              <td>每次写入做版本校验、幂等校验和确认 gate。</td>
+            </tr>
+            <tr>
+              <td>SQLite Store</td>
+              <td>保存作业、时间块、偏好、消息、操作日志、导入来源和提醒任务。</td>
+              <td>数据库文件位于应用数据目录，支持导出、备份和清空本地数据。</td>
+            </tr>
+            <tr>
+              <td>Local Reminder Scheduler（P1）</td>
+              <td>读取 SQLite 中到期提醒并触发 macOS 本地通知。</td>
+              <td>应用重启后可恢复；不依赖云队列或后台服务。</td>
+            </tr>
+            <tr>
+              <td>Import Adapters（Roadmap）</td>
+              <td>导入 Apple Calendar 忙闲、Schoology API、浏览器插件或本地文件。</td>
+              <td>MVP 只保留 adapter 接口，不实现真实外部连接。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <p class="muted" style="margin-top:12px">
-        <strong>非功能性方向（原型阶段的量级假设）</strong>：单区域部署，支持数百名试点用户；为 LLM 调用设定 token 预算与缓存策略（见<a href="#s17">第 17 节</a>成本风险）；外部日历双向同步须定义权威源与冲突解决策略（后端改动 vs 外部改动以谁为准）。
+        <strong>非功能性方向（原型阶段的量级假设）</strong>：单机单用户，离线可查看和编辑已有日程；需要 LLM 的拆分/解释功能在无网络或模型失败时降级为手动编辑。为 LLM 调用设定 token 预算与超时；外部同步不进入 MVP。
       </p>
     </section>
 
@@ -725,7 +790,7 @@
           <strong>提问：</strong>当不确定性较高时，提出具体问题，而不是随便猜。
         </div>
         <div class="loop-step">
-          <strong>执行：</strong>更新日程、提醒和可选的日历输出。对外部写入使用幂等键（重复执行不产生重复事件），失败时重试并可回退。
+          <strong>执行：</strong>通过本地 MCP 工具更新 SQLite 中的日程、提醒和操作日志。对重复提交使用幂等键，失败时保留 proposal 并允许用户重试或撤销。
         </div>
         <div class="loop-step">
           <strong>学习：</strong>根据用户修改和完成情况改进之后的计划。
@@ -736,6 +801,57 @@
           <strong>健壮性约定</strong>：①工具调用失败/超时按可重试性与幂等键处理；②“规划”与新的用户输入之间存在竞态时，以最新的用户意图为准并重新校验；③写入采用乐观并发控制（基于版本号），冲突时拒绝并提示，而非静默覆盖（数据模型见<a href="#s12">第 12 节</a>）。
         </p>
       </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>MVP 可实现控制流</caption>
+          <thead>
+            <tr>
+              <th scope="col">阶段</th>
+              <th scope="col">执行者</th>
+              <th scope="col">输出</th>
+              <th scope="col">写入规则</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>输入解析</td>
+              <td>Mac App + LLM</td>
+              <td>结构化意图、作业草稿、时间约束、需澄清字段。</td>
+              <td>仅保存用户原始消息与解析结果，不改日程。</td>
+            </tr>
+            <tr>
+              <td>作业拆分与解释</td>
+              <td>LLM</td>
+              <td>子任务候选、预计工时、原因、信心、假设。</td>
+              <td>LLM 不能直接写库；必须调用 <code>splitAssignment()</code> 或生成 proposal。</td>
+            </tr>
+            <tr>
+              <td>候选排程</td>
+              <td>确定性 scheduler</td>
+              <td>不冲突的时间块 proposal 与不可满足原因。</td>
+              <td>默认 <code>dryRun=true</code>，不产生最终时间块。</td>
+            </tr>
+            <tr>
+              <td>校验</td>
+              <td>validator</td>
+              <td>硬约束结果、软约束评分、受影响 block 版本。</td>
+              <td>硬约束失败不得提交；版本不匹配返回冲突列表。</td>
+            </tr>
+            <tr>
+              <td>确认 gate</td>
+              <td>用户 + 本地策略</td>
+              <td>确认 token 或拒绝原因。</td>
+              <td>低风险单块编辑可直接提交；批量重排、删除和覆盖固定块必须确认。</td>
+            </tr>
+            <tr>
+              <td>事务提交</td>
+              <td>MCP Schedule Server</td>
+              <td>提交后的 blocks、<code>ActionLog.batchId</code>、可撤销窗口。</td>
+              <td>同一批变更原子提交；失败则全部回滚。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="s7">
@@ -745,38 +861,41 @@
           <span class="tag">MVP 模式</span>
           <h3>手动或模拟导入</h3>
           <p>
-            使用样例数据或用户粘贴的作业信息（可让智能体解析粘贴的教学大纲以降低录入摩擦）。这样即使还没有学校管理员权限，也可以先验证日程和智能体逻辑。
+            使用内置 fixture、用户手动输入或粘贴的作业信息（可让智能体解析粘贴的教学大纲以降低录入摩擦）。P0 不建立真实 Schoology 网络连接，不抓取页面；这样可以先验证 Mac 桌面日程和智能体逻辑。
           </p>
         </div>
         <div class="card span-4">
-          <span class="tag">原型模式（路线图）</span>
+          <span class="tag">路线图</span>
           <h3>浏览器插件导入</h3>
           <p>
-            学生正常登录 Schoology，插件只读取学生已经能看到的页面内容并提取结构化数据。该路径受服务条款（ToS）限制，须先做评审，非 MVP 范围。
+            学生正常登录 Schoology，插件读取学生已经能看到的页面内容并提取结构化数据。该路径作为独立 adapter 设计，非 MVP 范围。
           </p>
         </div>
         <div class="card span-4">
-          <span class="tag">生产模式</span>
+          <span class="tag">路线图</span>
           <h3>官方 API 集成</h3>
           <p>
-            如果学校批准访问，后端使用 Schoology 官方 API 和 OAuth 1.0 流程，更稳定地读取课程、作业、成绩、事件和提交信息。
+            如果后续具备访问条件，本地导入 adapter 可使用 Schoology 官方 API 更稳定地读取课程、作业、成绩、事件和提交信息。
           </p>
         </div>
       </div>
       <div class="callout" style="margin-top:16px">
         <p>
-          Schoology 开发者文档包含 REST API、OAuth 1.0 认证、作业接口例如 <code>sections/{section_id}/assignments</code>，以及成绩、课程、用户相关接口。
+          <strong>MVP 决策</strong>：导入能力先做成本最低的本地路径：粘贴作业说明、粘贴教学大纲、导入内置示例数据。解析结果进入本地 <code>Assignment</code> 草稿，用户确认后才写入 SQLite。
         </p>
         <p>
-          <strong>OAuth 1.0 说明</strong>：Schoology 使用 OAuth 1.0（HMAC-SHA1 签名），已被业界普遍以 OAuth 2.0 取代。consumer key/secret 与 token 存放在服务端、绝不下发到客户端或插件，并定义撤销与轮换机制。abg-agent-swarm 的 Drive OAuth 属 OAuth 2.0，<strong>Calendar 授权可较直接复用其模式；Schoology 的 OAuth 1.0 需另实现签名流程</strong>，仅复用 token 服务端保管/撤销/轮换这套结构。
+          <strong>路线图</strong>：Schoology 官方 API、浏览器插件、Apple Calendar 忙闲导入都作为独立 adapter 处理。未来接入时只需要把外部数据转成同一套 <code>Assignment</code> / <code>Block</code> / <code>ImportSource</code> 模型，不改变排程器和日程工具契约。
         </p>
         <p>
-          <strong>健壮性</strong>：插件抓取须对选择器容错、对返回数据做 schema 校验、解析失败时降级为手动导入；API 集成须处理速率限制（指数退避、增量同步/ETag、合理轮询间隔）。
+          <strong>Schoology 参考资料</strong>：Schoology 开发者文档包含 REST API、OAuth 1.0 认证、作业接口例如 <code>sections/{section_id}/assignments</code>，以及成绩、课程、用户相关接口。项目应避免收集 Schoology 密码。更安全的方式是官方 OAuth 或读取用户已经可见页面的插件导入。
         </p>
         <p>
           参考链接：<a href="https://developers.schoology.com/api/">Schoology API Documentation</a>，
           <a href="https://developers.schoology.com/api-documentation/authentication/">Authentication</a>，
           <a href="https://developers.schoology.com/api-documentation/rest-api-v1/">REST API</a>。
+        </p>
+        <p>
+          <strong>健壮性</strong>：粘贴解析失败时保留原文并让用户手动补字段；导入 fixture 和外部 adapter 都必须做 schema 校验、来源标记和重复导入去重。
         </p>
       </div>
     </section>
@@ -799,7 +918,7 @@
           <ul>
             <li>有开始和结束时间的日程块。</li>
             <li>大型作业和项目的子任务。</li>
-            <li>基于紧急程度、工作量和成绩影响的优先级。</li>
+            <li>MVP 基于截止日期、工作量、固定安排和用户偏好的优先级；成绩影响仅作为只读演示，不进入真实排序。</li>
             <li>解释每个时间块为什么被安排在那里。</li>
             <li>当计划依赖未知信息时提出问题。</li>
           </ul>
@@ -809,6 +928,55 @@
         <p>
           <strong>排程质量从哪里来（方向性说明）</strong>：这是产品的真正难点。MVP 采用<strong>“确定性约束 + LLM 分工”</strong>的混合方式：LLM 负责<em>作业拆分</em>与<em>原因解释</em>；确定性逻辑负责<em>把子任务放进不冲突的可用时段</em>（尊重固定块、截止日期、每日工作上限）。工作量估算来源优先级：用户输入 &gt; 历史完成数据 &gt; 从评分量规/作业类型推断的默认值。多约束冲突时按“临近截止日期 + 成绩影响 + 用户偏好”排序，并以人工确认兜底。<strong>注：MVP 阶段成绩计算未落地（见<a href="#s9">第 9 节</a>），排序退化为“临近截止日期 + 用户偏好”，成绩影响待真实计算落地后接入。</strong> MVP 接受“排得不完美”，但要求可解释、可撤销。
         </p>
+      </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>MVP 排程规格</caption>
+          <thead>
+            <tr>
+              <th scope="col">规则</th>
+              <th scope="col">P0 决策</th>
+              <th scope="col">测试点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>时间粒度与规划窗口</td>
+              <td>默认 15 分钟粒度；周视图规划未来 7 天，若作业截止日在 14 天内可扩展到截止日前一天。</td>
+              <td>跨天、跨周、时区和夏令时 fixture 必须覆盖。</td>
+            </tr>
+            <tr>
+              <td>硬约束</td>
+              <td>不得与固定块重叠；不得越过截止时间；不得安排在睡眠块内；每日学习块总量默认不超过用户上限。</td>
+              <td>硬约束失败返回 <code>UNSCHEDULABLE</code>，并列出缺口时长与冲突块。</td>
+            </tr>
+            <tr>
+              <td>软约束</td>
+              <td>优先临近截止日期、用户偏好时段、较短上下文切换；尽量把依赖任务按顺序排列。</td>
+              <td>同一 fixture 多次运行应产生稳定结果；tie-breaker 按截止时间、任务顺序、创建时间。</td>
+            </tr>
+            <tr>
+              <td>拆块规则</td>
+              <td>LLM 生成 2–6 个子任务；单块建议 25–90 分钟，超过 90 分钟继续拆分；每个子任务带工时假设。</td>
+              <td>给定 rubric 的项目作业应拆出研究、草稿/制作、复核等可执行块。</td>
+            </tr>
+            <tr>
+              <td>P0 基线算法</td>
+              <td>按截止时间排序，按依赖顺序拆块；在可用 15 分钟 slot 中用确定性评分选择位置，评分优先考虑截止距离、用户偏好和上下文切换成本。</td>
+              <td>同一 fixture 必须稳定输出；评分变化要有单测覆盖。</td>
+            </tr>
+            <tr>
+              <td>不可满足行为</td>
+              <td>不强行挤占睡眠或固定安排；返回建议：减少范围、延后非关键任务、请求用户确认新增可用时间。</td>
+              <td>无可用时间 fixture 不能写库，只能显示 proposal 与澄清问题。</td>
+            </tr>
+            <tr>
+              <td>批量重排</td>
+              <td><code>batchReschedule()</code> 默认生成 proposal；用户确认后按受影响 block 版本原子提交。</td>
+              <td>版本冲突必须返回冲突列表，不能静默覆盖用户最新拖动/编辑。</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -844,32 +1012,39 @@
     <section id="s10">
       <h2>10. 消息抽象层</h2>
       <p class="muted">
-        智能体不应该直接绑定某一个平台。它应该通过一个消息层发送提醒，这样原型现在能工作，将来也能添加更多渠道。
+        智能体不应该直接操作 UI。Mac 版通过一个本地消息层统一处理应用内聊天、每日规划消息和 macOS 本地通知。
       </p>
       <div class="grid">
         <div class="card span-6">
           <h3>概念</h3>
           <p>
-            智能体只调用一个内部函数，例如 <code>sendMessage(user, message, options)</code>。消息系统再决定通过应用内聊天、应用内提醒、邮件、短信、官方微信或其他未来渠道发送。
+            智能体只调用一个内部函数，例如 <code>sendMessage(message, options)</code>。消息系统再决定显示在聊天流、提醒中心、菜单栏入口或 macOS Notification Center。
           </p>
         </div>
         <div class="card span-6">
           <h3>第一版实现与投递语义</h3>
           <ul>
-            <li>先实现应用内聊天与应用内提醒（MVP 不依赖浏览器推送）。</li>
-            <li>由调度引擎触发定时提醒（如“到微积分复习时间了”）。</li>
-            <li>定义投递语义：失败重试、渠道降级（fallback）、去重与频率控制（安静时段 / 每日上限），避免<a href="#s2">第 2 节</a>所说的“提醒轰炸”。</li>
-            <li>接口预留短信、官方微信或邮件的接入位置。</li>
-            <li>MVP 不使用非官方的个人微信或 Instagram 机器人。</li>
+            <li>P0 实现应用内聊天、手动触发的每日规划消息和提醒列表。</li>
+            <li>P1 使用 macOS 本地通知触发定时提醒（如“到微积分复习时间了”）。</li>
+            <li>提醒必须去重并尊重安静时段 / 每日上限，避免<a href="#s2">第 2 节</a>所说的“提醒轰炸”。</li>
+            <li>MVP 不接短信、邮件、微信、Instagram 或任何云消息渠道。</li>
           </ul>
         </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          <strong>提醒执行模型（P1 起）</strong>：提醒任务以 <code>Reminder</code> 实体持久化，包含 <code>dueAt</code>、<code>status</code>、<code>idempotencyKey</code> 和关联 <code>blockId</code>。应用启动时从 SQLite 恢复待触发提醒，并通过 macOS 本地通知或应用内提醒展示；不依赖云队列、后台服务器或浏览器推送。
+        </p>
       </div>
     </section>
 
     <section id="s11">
       <h2>11. 智能体工具</h2>
       <p class="muted">
-        下表为工具概览。工具经 <strong>MCP server</strong> 暴露给 Codex 调用（不 fork codex-rs 核心）。每个工具在实现前须补全契约：输入/输出 schema、错误码、是否需用户确认、是否幂等。带副作用的工具（写日历、发消息、批量重排）默认需要确认。
+        下表为工具概览。工具经本地 <strong>MCP server</strong> 暴露给 Codex 调用（不 fork codex-rs 核心）。所有工具共享应用注入的 <code>ToolContext</code>：<code>appInstanceId</code>、<code>scheduleId</code>、<code>requestId</code>。带副作用的工具必须支持 <code>dryRun</code>、<code>idempotencyKey</code>、<code>expectedVersion</code> 和确认 gate。
+      </p>
+      <p class="muted">
+        P0 必须落机器可执行 schema（JSON Schema、TypeScript 类型或 Swift DTO 三选一）。P0 工具集合为：<code>getSchedule</code>、<code>getAssignments</code>、<code>createBlock</code>、<code>moveBlock</code>、<code>deleteBlock</code>、<code>batchReschedule</code>、<code>splitAssignment</code>、<code>askClarifyingQuestion</code>、<code>undo</code>、<code>sendMessage</code>；<code>setPreference</code> 为 P1，P0 只记录用户显式设置。
       </p>
       <div class="table">
         <table>
@@ -940,10 +1115,88 @@
           </tbody>
         </table>
       </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>MVP 工具最小契约</caption>
+          <thead>
+            <tr>
+              <th scope="col">工具</th>
+              <th scope="col">输入参数（除 ToolContext）</th>
+              <th scope="col">返回值</th>
+              <th scope="col">错误码 / 确认策略</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getSchedule()</code></td>
+              <td><code>windowStart</code>、<code>windowEnd</code>、<code>includeCompleted</code></td>
+              <td><code>scheduleVersion</code>、blocks、assignments、preferences 摘要</td>
+              <td><code>RANGE_TOO_LARGE</code>、<code>DB_UNAVAILABLE</code>；只读，无需确认。</td>
+            </tr>
+            <tr>
+              <td><code>getAssignments()</code></td>
+              <td>状态、课程、截止时间窗口、<code>includeCompleted</code></td>
+              <td>作业列表、关联 block 摘要、导入来源</td>
+              <td><code>RANGE_TOO_LARGE</code>、<code>DB_UNAVAILABLE</code>；只读，无需确认。</td>
+            </tr>
+            <tr>
+              <td><code>createBlock()</code></td>
+              <td>block 草稿、<code>assignmentId</code>、<code>dryRun</code>、<code>idempotencyKey</code>、<code>expectedScheduleVersion</code></td>
+              <td>proposal 或已创建 block、校验结果、<code>confirmationToken</code></td>
+              <td><code>VALIDATION_ERROR</code>、<code>CONFLICT</code>、<code>CONFIRMATION_REQUIRED</code>；固定块或高影响块需确认。</td>
+            </tr>
+            <tr>
+              <td><code>moveBlock()</code></td>
+              <td><code>blockId</code>、新开始/结束时间、<code>expectedBlockVersion</code>、<code>dryRun</code>、<code>idempotencyKey</code></td>
+              <td>diff、受影响块、提交后版本</td>
+              <td><code>NOT_FOUND</code>、<code>VERSION_CONFLICT</code>、<code>HARD_CONSTRAINT_FAILED</code>；单块低风险移动可直接提交。</td>
+            </tr>
+            <tr>
+              <td><code>deleteBlock()</code></td>
+              <td><code>blockId</code>、<code>expectedBlockVersion</code>、删除原因、<code>dryRun</code>、<code>idempotencyKey</code></td>
+              <td>diff、可撤销 <code>actionLogId</code></td>
+              <td><code>VERSION_CONFLICT</code>、<code>CONFIRMATION_REQUIRED</code>；删除固定块或作业关联块需确认。</td>
+            </tr>
+            <tr>
+              <td><code>batchReschedule()</code></td>
+              <td>目标窗口、变动原因、affected block versions、硬/软约束、<code>dryRun</code>、<code>idempotencyKey</code></td>
+              <td>proposal、结构化 diff、不可满足原因、<code>confirmationToken</code></td>
+              <td><code>UNSCHEDULABLE</code>、<code>VERSION_CONFLICT</code>、<code>CONFIRMATION_REQUIRED</code>；默认先 proposal，确认后原子提交。</td>
+            </tr>
+            <tr>
+              <td><code>splitAssignment()</code></td>
+              <td>作业文本、rubric、截止时间、用户工时估计、最大块数、<code>dryRun</code></td>
+              <td>2–6 个子任务、工时假设、信心、需澄清问题</td>
+              <td><code>INSUFFICIENT_INFO</code>、<code>LLM_PARSE_FAILED</code>；默认不写库，写入子任务需用户确认或显式提交。</td>
+            </tr>
+            <tr>
+              <td><code>askClarifyingQuestion()</code></td>
+              <td>问题文本、选项（可选）、关联作业/时间块、阻塞原因</td>
+              <td>写入聊天流的待回答问题、关联上下文</td>
+              <td><code>MISSING_CONTEXT</code>；只写应用内消息，不改日程。</td>
+            </tr>
+            <tr>
+              <td><code>undo()</code></td>
+              <td><code>actionLogId</code> 或 <code>batchId</code>、当前受影响版本、<code>idempotencyKey</code></td>
+              <td>恢复 diff、提交后版本、无法恢复原因</td>
+              <td><code>UNDO_EXPIRED</code>、<code>VERSION_CONFLICT</code>；若受影响块已被用户再次编辑，则返回冲突并要求人工选择。</td>
+            </tr>
+            <tr>
+              <td><code>sendMessage()</code></td>
+              <td>渠道、消息类型、文本模板、关联 <code>blockId</code>、<code>idempotencyKey</code></td>
+              <td>投递状态、去重结果、下一次重试时间</td>
+              <td><code>RATE_LIMITED</code>、<code>QUIET_HOURS</code>、<code>DELIVERY_FAILED</code>；P0 仅应用内聊天，P1 起用于 macOS 本地提醒。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="s12">
       <h2>12. 数据模型</h2>
+      <p class="muted">
+        P0 推荐使用 SQLite，数据库文件保存在 macOS 应用数据目录。所有核心表默认包含 <code>id</code>、<code>created_at</code>、<code>updated_at</code>、<code>deleted_at</code>（软删除）和 <code>version</code>。时间字段使用 UTC epoch milliseconds 或 ISO-8601 UTC 字符串保存，并单独保存 IANA timezone；显示时按用户时区转换。并发控制以 <code>version int</code> 为基础；未来导入/同步以 <code>source</code>、<code>external_id</code>、<code>import_batch_id</code> 去重。
+      </p>
       <div class="table">
         <table>
           <caption>核心实体与关键字段</caption>
@@ -956,19 +1209,34 @@
           </thead>
           <tbody>
             <tr>
-              <td>User</td>
-              <td>姓名、时区、目标、通知设置</td>
-              <td>存储个人规划偏好。</td>
+              <td>LocalProfile</td>
+              <td><code>id</code>、昵称、时区、年级段、目标、通知设置、每日学习上限、安静时段</td>
+              <td>本机单用户 profile；不需要账号、租户或登录体系。</td>
+            </tr>
+            <tr>
+              <td>Schedule</td>
+              <td><code>id</code>、名称、时区、默认规划窗口、<code>version</code></td>
+              <td>一个用户的主日程聚合根；批量重排以 schedule version 与受影响 block version 共同校验。</td>
             </tr>
             <tr>
               <td>Block</td>
-              <td>标题、类型、开始、结束、时区、重复规则(RRULE)、预计时长、实际时长、依赖(dependsOn)、优先级、是否可移动、来源、状态/完成、信心、原因、版本、更新时间/更新者、关联作业(assignmentId)</td>
-              <td>核心日程对象；版本与更新者支撑乐观并发与冲突检测（见<a href="#s6">第 6 节</a>）。</td>
+              <td><code>id</code>、<code>schedule_id</code>、标题、类型(enum)、开始/结束(UTC)、时区、RRULE、例外日期、预计/实际时长、依赖、优先级、是否可移动、来源、<code>external_source</code>/<code>external_id</code>、状态、信心、原因、<code>version</code>、<code>assignment_id</code>、<code>parent_block_id</code></td>
+              <td>核心日程对象；版本与更新者支撑乐观并发与冲突检测（见<a href="#s6">第 6 节</a>）。LLM 拆出的子任务直接保存为 <code>Block(type=generated_work)</code>，通过 <code>assignment_id</code> 关联作业，不另建 TaskStep。重复事件通过 RRULE + exception/override 表示。</td>
+            </tr>
+            <tr>
+              <td>BlockInstanceOverride</td>
+              <td><code>block_id</code>、实例日期、覆盖开始/结束、取消标记、覆盖原因、<code>version</code></td>
+              <td>支持编辑单次重复事件，避免把周期性事件逐次复制。</td>
             </tr>
             <tr>
               <td>Assignment</td>
-              <td>标题、课程、带时区的截止时间、描述、评分量规、分数、类别、预计工时、子任务关联、状态</td>
-              <td>可以导入或手动创建。</td>
+              <td><code>id</code>、标题、课程、带时区的截止时间、描述、评分量规摘要、类别、预计工时、状态、<code>source</code>、<code>external_id</code>、<code>import_batch_id</code></td>
+              <td>可以导入或手动创建；P0 的成绩字段仅用于演示 fixture，不参与真实计算。</td>
+            </tr>
+            <tr>
+              <td>ImportSource / SyncState</td>
+              <td>来源类型、文件/粘贴批次、外部 provider（路线图）、<code>external_id</code>、最后导入时间、状态、错误摘要</td>
+              <td>P0 用于 fixture/粘贴导入去重；路线图接 Schoology/Calendar 时复用同一来源模型。</td>
             </tr>
             <tr>
               <td>Preference</td>
@@ -977,18 +1245,28 @@
             </tr>
             <tr>
               <td>Grade Context</td>
-              <td>课程、当前成绩、目标成绩、分类权重、评分量规</td>
-              <td>用于优先级估算。</td>
+              <td>课程、当前成绩、目标成绩、分类权重、评分量规、来源、用户确认标记</td>
+              <td>仅用于路线图真实计算；P0 只读 fixture 必须标记为“演示数据”。</td>
             </tr>
             <tr>
               <td>Message</td>
-              <td>发送者、文本、时间、渠道、投递状态、相关时间块</td>
-              <td>支持对话式规划。</td>
+              <td><code>id</code>、发送者、文本或模板变量、时间、渠道、投递状态、相关时间块</td>
+              <td>支持应用内聊天与每日规划消息。</td>
+            </tr>
+            <tr>
+              <td>Reminder</td>
+              <td><code>id</code>、<code>block_id</code>、<code>due_at</code>、渠道、状态、<code>idempotency_key</code>、<code>retry_count</code>、下一次重试时间</td>
+              <td>P1 起启用；持久化提醒任务，支持重启恢复、去重与失败重试。</td>
             </tr>
             <tr>
               <td>ActionLog</td>
-              <td>操作者(用户/智能体)、动作、变更前后(before/after)、时间戳</td>
-              <td>同时支撑撤销（undo）与操作审计，落地<a href="#s13">第 13 节</a>的撤销/日志能力。</td>
+              <td><code>id</code>、<code>batch_id</code>、操作者(用户/智能体)、动作、最小 diff、受影响对象版本、撤销快照 TTL、时间戳</td>
+              <td>支撑撤销（undo）、调试与本地历史记录。</td>
+            </tr>
+            <tr>
+              <td>AppSetting</td>
+              <td>LLM 模型配置、token 预算、通知开关、默认规划偏好、最后备份路径</td>
+              <td>本机设置；API key 如需保存，应使用 macOS Keychain，而不是 SQLite 明文。</td>
             </tr>
           </tbody>
         </table>
@@ -996,9 +1274,9 @@
     </section>
 
     <section id="s13">
-      <h2>13. 智能体安全与可控性</h2>
+      <h2>13. 智能体可控性</h2>
       <p class="muted">
-        智能体会自动修改用户日程，因此可控性与可信任是产品能被采纳的前提。本节关注智能体的行为安全与可控性。
+        智能体会自动修改本地日程，因此可控性与可信任是产品能被采纳的前提。本节关注“什么时候能自动提交、什么时候必须让用户确认、如何撤销和排查”。
       </p>
       <div class="grid">
         <div class="card span-6">
@@ -1009,17 +1287,53 @@
             <li>保留撤销历史（由 ActionLog 支撑），支持一键回退。</li>
             <li>记录智能体操作，便于调试和建立信任。</li>
             <li>MVP 不让智能体提交作业或给老师发消息。</li>
+            <li>排程硬约束：不得压缩睡眠块，不得绕过固定块，不替用户完成或提交作业。</li>
           </ul>
         </div>
         <div class="card span-6">
-          <h3>输入与工具防护</h3>
+          <h3>输入与工具约束</h3>
           <ul>
-            <li>作业描述、抓取页面等外部内容为不可信输入，与指令隔离（结构化封装/分隔），防止 prompt injection 操纵智能体。</li>
-            <li>高副作用工具（<code>sendMessage</code>、写日历、批量重排）强制确认与权限边界。</li>
+            <li>作业描述、PDF 文本和粘贴内容只作为资料字段处理，不作为系统指令执行。</li>
+            <li>高影响工具（<code>sendMessage</code>、删除、批量重排）强制确认。</li>
             <li>对工具输出做校验（时间合法、无越界），异常时回退到人工确认。</li>
             <li>为智能体决策保留可观测性（日志/追踪），便于回归与排错。</li>
+            <li>工具提交由本地策略和版本校验决定，不由模型自由改 SQLite。</li>
           </ul>
         </div>
+      </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>操作分级与确认策略</caption>
+          <thead>
+            <tr>
+              <th scope="col">等级</th>
+              <th scope="col">例子</th>
+              <th scope="col">策略</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>只读</td>
+              <td>读取日程、列出作业、解释原因。</td>
+              <td>无需确认；必须能读取到本地对象。</td>
+            </tr>
+            <tr>
+              <td>低风险编辑</td>
+              <td>用户明确要求移动单个可移动学习块。</td>
+              <td>可直接提交；记录 ActionLog；可撤销。</td>
+            </tr>
+            <tr>
+              <td>高风险变更</td>
+              <td>批量重排、删除、移动固定块、影响多个作业。</td>
+              <td>先生成结构化 proposal 与 diff；用户确认后提交。</td>
+            </tr>
+            <tr>
+              <td>路线图外部写入</td>
+              <td>写 Apple Calendar、Schoology 或其他外部系统。</td>
+              <td>MVP 不做；若未来实现，必须独立确认并可关闭。</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1032,10 +1346,13 @@
         <div class="card span-6">
           <h3>原型（MVP）验收指标</h3>
           <ul>
-            <li><strong>硬性门槛</strong>：<a href="#s18">第 18 节</a>演示脚本可端到端无人工干预跑通。</li>
+            <li><strong>硬性门槛</strong>：<a href="#s18">第 18 节</a>演示脚本可端到端无开发者干预跑通；允许正常用户确认 proposal 与高风险变更。</li>
             <li><strong>拆分质量</strong>：给定一个带评分量规的作业，智能体拆出 ≥4 个合理子任务且时间估算被用户认可。</li>
             <li><strong>接受率（北极星雏形）</strong>：AI 生成的时间块中被用户直接接受（未重排/删除）的比例，原型期观测参考 ≥60%，作为<strong>观测项而非 go/no-go 门槛</strong>。</li>
             <li><strong>数据持久化</strong>：录入的作业与时间块刷新后不丢失。</li>
+            <li><strong>冷启动成本</strong>：首次设置固定安排并录入 3 个作业目标 ≤8 分钟；粘贴教学大纲可提取标题、截止日期和粗略工时。</li>
+            <li><strong>桌面可用性</strong>：Mac 应用可冷启动、关闭后重开、离线查看既有日程；SQLite 数据文件可导出或清空。</li>
+            <li><strong>可控性门槛</strong>：批量重排先显示 proposal；确认后写入；撤销可恢复上一批智能体操作。</li>
           </ul>
         </div>
         <div class="card span-6">
@@ -1053,18 +1370,25 @@
     <section id="s15">
       <h2>15. 三周 MVP 计划</h2>
       <p class="muted">
-        <strong>技术底座</strong>：智能体运行时基于上游 <code>openai/codex</code>（复用工具调用循环），聊天 UI 与 OAuth 复用 <code>abg-agent-swarm</code> 现成实现；因此三周聚焦于<strong>学校日程特定功能</strong>（时间块模型、拖拽日历、Schoology 导入、日程工具与排程逻辑）以及<strong>多用户封装 / 持久化 / 调度引擎</strong>等净新增工作，范围压力较从零开发显著降低。<strong>人力假设</strong>：1–2 名全职原型开发者。<strong>范围策略</strong>：先做透一条最小可信循环（P0），其余标注为 P1/Stretch 或移入路线图；每周给出可验证的完成定义（DoD）。
+        <strong>技术底座</strong>：个人版 Mac 桌面应用，本地运行 Codex 工具调用循环与 MCP Schedule Server，SQLite 保存日程数据。三周聚焦于<strong>单用户本地可信闭环</strong>：时间块模型、Mac 周日程界面、手动/粘贴/fixture 导入、MVP 工具契约、确定性排程、proposal 确认与撤销。<strong>人力假设</strong>：1–2 名全职原型开发者。<strong>范围策略</strong>：先做透 Mac P0；云同步、多用户、真实 Schoology/Calendar、成绩计算和偏好学习闭环均移入路线图。
       </p>
+      <div class="callout" style="margin-bottom:16px">
+        <p>
+          <strong>开发启动条件</strong>：Week 1 前锁定桌面壳技术（优先 SwiftUI；若团队更熟前端，可选 Tauri/Electron）、SQLite 访问层、Codex 本地调用方式和 MCP 工具 schema 草案；跑通一个本地 Codex → MCP 工具调用 spike。
+        </p>
+      </div>
       <div class="grid">
         <div class="card phase span-4">
           <span class="tag p0">Week 1 · P0</span>
           <h3>日程基础</h3>
           <ul>
-            <li>在 Codex 底座上接好聊天/后端骨架，跑通一个自定义 MCP 工具被 Codex 调用（底座验证点）。</li>
-            <li>创建响应式网页日程板与固定周日程设置；支持点击编辑面板修改时间块（自由拖拽为增强项）。</li>
-            <li>手动作业输入或模拟 Schoology 数据（锁定此路径，不做插件）；把所有任务表示为时间块并持久化。</li>
+            <li>创建 Mac 桌面壳、周日程主窗口、作业录入面板和聊天侧栏。</li>
+            <li>建立 SQLite schema 与迁移：LocalProfile、Schedule、Block、Assignment、Message、ActionLog、ImportSource。</li>
+            <li>跑通 <code>getSchedule()</code> 与 <code>createBlock(dryRun)</code> 本地 MCP 工具。</li>
+            <li>创建固定周日程设置；支持点击编辑面板修改时间块（自由拖拽为增强项）。</li>
+            <li>手动作业输入、粘贴解析或模拟 Schoology fixture（锁定此路径，不做插件/真实 API）；把所有任务表示为时间块并持久化。</li>
           </ul>
-          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：跑通一个 MCP 工具调用；用户可录入 5 个作业、在周视图看到对应时间块并能编辑其时间；刷新后数据仍在。</p>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：用户可录入 5 个作业、在周视图看到对应时间块并能通过点击面板编辑其时间；关闭应用再打开后数据仍在。</p>
         </div>
         <div class="card phase span-4">
           <span class="tag p0">Week 2 · P0</span>
@@ -1072,27 +1396,106 @@
           <ul>
             <li>以 MCP 工具注册创建/移动/删除时间块的日程工具。</li>
             <li>把大型作业拆成子任务，附原因说明与信心标签。</li>
-            <li>实现冲突检测与原子批量重排（<code>batchReschedule</code>）。</li>
+            <li>实现确定性 scheduler、冲突检测与 <code>batchReschedule(dryRun)</code> proposal。</li>
             <li>添加通过聊天修改日程的命令；为 LLM 规划建立小型评测集（若干标准案例）。</li>
           </ul>
-          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：给定 1 个作业，端到端“拆分→排入日程→解释理由”，能响应一次自然语言改期；新增一个紧急作业能触发一次成功的批量重排消解冲突。</p>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：给定 1 个作业，端到端“拆分→排入日程→解释理由”；能响应一次自然语言改期；新增紧急作业可生成批量重排 proposal，用户确认后原子提交并可撤销。</p>
         </div>
         <div class="card phase span-4">
           <span class="tag p1">Week 3 · P1 + 收尾</span>
           <h3>集成、测试与演示</h3>
           <ul>
-            <li>应用内提醒（浏览器推送移入路线图）。</li>
+            <li>P0 收尾：撤销、错误状态、空闲时间不足、版本冲突、Mac 窗口尺寸适配。</li>
+            <li>P1 预览：macOS 本地通知，只有在 P0 稳定后进入。</li>
             <li>成绩感知优先级：只读示例（不实现真实计算）。</li>
             <li><strong>预留 20–30% 时间做测试与修 bug</strong>；打磨 UI 与演示流程。</li>
-            <li>准备最终展示与限制说明。</li>
+            <li>准备可运行的本地 Mac 演示包与限制说明。</li>
           </ul>
-          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：演示脚本全部跑通；关键路径有回归用例；智能体错误排程可撤销恢复。</p>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：演示脚本全部跑通；关键路径有回归用例；智能体错误排程可撤销恢复；应用可在目标 Mac 上本地启动。</p>
         </div>
       </div>
       <div class="callout" style="margin-top:16px">
         <p>
-          <strong>MVP Gate（go / no-go）</strong>：三周结束时按<a href="#s14">第 14 节</a>验收指标评估，决定是否继续、进入路线图哪个阶段。降级/移出 MVP 的项：浏览器通知、真实成绩感知计算、偏好学习闭环、Schoology 插件与官方 API。
+          <strong>MVP Gate（go / no-go）</strong>：三周结束时按<a href="#s14">第 14 节</a>验收指标评估，决定是否继续、进入路线图哪个阶段。降级/移出 P0 的项：云同步、多用户、拖拽/拉伸、真实成绩感知计算、偏好学习闭环、Schoology 插件与官方 API、外部日历写入。
         </p>
+      </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>P0 测试与本地验收门槛</caption>
+          <thead>
+            <tr>
+              <th scope="col">类别</th>
+              <th scope="col">必过内容</th>
+              <th scope="col">失败处理</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>工具契约测试</td>
+              <td>MCP 工具 schema、错误码、幂等键、版本冲突、确认 token、本地 SQLite 事务。</td>
+              <td>阻止合并。</td>
+            </tr>
+            <tr>
+              <td>排程单测</td>
+              <td>硬约束、软约束 tie-breaker、无可用时间、跨天/跨周、夏令时/时区。</td>
+              <td>阻止发布。</td>
+            </tr>
+            <tr>
+              <td>LLM 评测</td>
+              <td>作业拆分合理性、输出 JSON 解析、低信息输入时提问而非猜测。P0 阈值：标准 fixture JSON 解析成功率 ≥95%；项目作业拆分人工通过率 ≥80%；低信息输入时提问率 ≥90%。</td>
+              <td>未达阈值则回到 prompt/工具契约修订。</td>
+            </tr>
+            <tr>
+              <td>E2E</td>
+              <td>桌面 UI 流程覆盖录入作业、生成计划、确认 proposal、撤销、关闭重开后持久化。</td>
+              <td>阻止演示。</td>
+            </tr>
+            <tr>
+              <td>本地数据回归</td>
+              <td>SQLite 迁移、导入去重、数据导出/清空、损坏数据库时的错误提示。</td>
+              <td>阻止演示包交付。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table" style="margin-top:16px">
+        <table>
+          <caption>P0 本地运行与调试最低规格</caption>
+          <thead>
+            <tr>
+              <th scope="col">方面</th>
+              <th scope="col">决策</th>
+              <th scope="col">检查项</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>应用数据目录</td>
+              <td>SQLite、日志和导入 fixture 放在 macOS 应用数据目录；支持从设置页打开数据目录。</td>
+              <td>路径可见、权限正常、卸载/清空行为明确。</td>
+            </tr>
+            <tr>
+              <td>数据库</td>
+              <td>SQLite migration 可重复执行；启动时检查 schema 版本；失败时提示备份/重建。</td>
+              <td>迁移版本、持久化错误、版本冲突数。</td>
+            </tr>
+            <tr>
+              <td>LLM 成本</td>
+              <td>每个请求有 token 上限、超时和最小上下文策略。</td>
+              <td>token、成本、延迟、JSON 解析失败率。</td>
+            </tr>
+            <tr>
+              <td>工具调用</td>
+              <td>所有工具带 <code>requestId</code> / correlation id；错误码结构化。</td>
+              <td>工具延迟、错误率、重试数、确认通过/拒绝数、undo rate。</td>
+            </tr>
+            <tr>
+              <td>提醒（P1）</td>
+              <td>进入 P1 后使用 SQLite 中的 Reminder 表恢复 macOS 本地通知；不使用内存 timer 作为唯一来源。</td>
+              <td>投递成功率、去重命中、安静时段拦截。</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -1100,24 +1503,24 @@
       <h2>16. 长期路线图</h2>
       <div class="grid">
         <div class="card span-3">
-          <h3>Schoology API</h3>
-          <p>在学校批准后，使用官方 OAuth/API 集成。</p>
+          <h3>Mac 原生增强</h3>
+          <p>菜单栏快速录入、全局快捷键、macOS 本地通知和 Spotlight/日历式搜索。</p>
         </div>
         <div class="card span-3">
-          <h3>浏览器插件</h3>
-          <p>在完成 ToS 评审后，为无管理员集成的用户导入可见 Schoology 数据。</p>
+          <h3>本地文件导入</h3>
+          <p>导入 PDF、CSV、ICS 或复制的教学大纲，统一转成 Assignment 与 Block。</p>
         </div>
         <div class="card span-3">
-          <h3>消息渠道</h3>
-          <p>通过抽象层添加短信、邮件、官方微信或其他渠道。</p>
+          <h3>Schoology / Calendar</h3>
+          <p>可选接入 Schoology API、浏览器插件或 Apple Calendar 只读忙闲信息。</p>
         </div>
         <div class="card span-3">
           <h3>通用规划器</h3>
-          <p>扩展到实习、工作项目、社团和个人目标（可迁移资产：时间块模型、智能体循环、消息层）。</p>
+          <p>扩展到实习、工作项目、社团和个人目标（可迁移资产：时间块模型、智能体循环、本地工具层）。</p>
         </div>
       </div>
       <p class="muted" style="margin-top:12px">
-        里程碑衔接：MVP → <strong>MVP Gate 评估</strong> → 依据结果依次推进上述阶段，每阶段有前置条件（如学校授权）与成功标准。
+        里程碑衔接：Mac MVP → <strong>MVP Gate 评估</strong> → 依据结果依次推进上述阶段；云同步和多设备体验只有在个人桌面使用闭环验证后才考虑。
       </p>
     </section>
 
@@ -1136,28 +1539,28 @@
           <tbody>
             <tr>
               <td>范围管理（3 周）</td>
-              <td>仍需在期限内交付；日程特定部分（拖拽日历、拆分质量、排程逻辑）是主要工作量。</td>
-              <td>复用 abg-agent-swarm（Codex）底座省去运行时/聊天 UI/OAuth 从零开发；锁定 P0 最小循环，其余移入路线图。</td>
+              <td>仍需在期限内交付；Mac UI、SQLite、MCP 工具、拆分质量和排程逻辑是主要工作量。</td>
+              <td>锁定 P0 最小循环：点击编辑、粘贴/fixture 导入、确定性排程、确认与撤销；拖拽、外部集成、云同步移入路线图。</td>
             </tr>
             <tr>
               <td>底座契合度 / 适配成本</td>
-              <td>Codex 是单用户编码智能体，包装成多用户 + 定时提醒的 Web 服务需额外适配；熟悉其构建与 MCP 工具注册也有学习曲线。</td>
-              <td>日程工具走 MCP、不 fork 核心；Week 1 设底座验证点；把多用户封装/持久化/调度作为净新增显式排期。</td>
+              <td>Codex 是通用智能体运行时，包装成本地桌面应用内的工具调用循环仍有学习曲线。</td>
+              <td>日程工具走本地 MCP、不 fork 核心；Week 1 先跑通 <code>getSchedule()</code> 与 <code>createBlock(dryRun)</code>。</td>
             </tr>
             <tr>
-              <td>后台调度可靠性</td>
-              <td>定时提醒需在进程重启后仍可触发，否则提醒丢失。</td>
-              <td>使用成熟定时/队列组件，提醒设计为幂等可重放。</td>
+              <td>本地数据损坏或丢失</td>
+              <td>SQLite 文件损坏、迁移失败或误删会影响所有日程。</td>
+              <td>启动时检查 schema，提供导出/备份/清空数据入口；迁移前备份数据库文件。</td>
             </tr>
             <tr>
               <td>并发写冲突</td>
-              <td>用户拖拽与智能体自动重排同时发生可能互相覆盖。</td>
+              <td>用户点击编辑与智能体自动重排同时发生可能互相覆盖。</td>
               <td>基于版本号的乐观并发控制，冲突时拒绝并提示，而非静默覆盖。</td>
             </tr>
             <tr>
-              <td>移动端形态错配</td>
-              <td>桌面网页与高中生移动优先习惯错配，影响采纳。</td>
-              <td>MVP 采用响应式网页保证手机可用；原生 App 列入路线图。</td>
+              <td>Mac 桌面形态限制</td>
+              <td>学生不在电脑前时无法及时处理提醒或改日程。</td>
+              <td>MVP 聚焦“坐下学习前规划本周”；移动提醒和云同步不作为本轮目标。</td>
             </tr>
             <tr>
               <td>LLM 成本与延迟</td>
@@ -1167,7 +1570,7 @@
             <tr>
               <td>Schoology 数据获取失败</td>
               <td>手动录入削弱“信息聚合”价值；插件受 DOM/反爬/ToS 影响失效。</td>
-              <td>MVP 锁定手动+模拟并降低录入摩擦（解析教学大纲）；插件/API 作为需评审的升级路径。</td>
+              <td>MVP 锁定手动+模拟并降低录入摩擦（解析教学大纲）；插件/API 作为升级路径。</td>
             </tr>
             <tr>
               <td>智能体做出差的日程安排</td>
@@ -1177,7 +1580,7 @@
             <tr>
               <td>提醒被忽略</td>
               <td>产品必须真的影响行为。</td>
-              <td>用签到式对话、每日规划固定环节，以及未来更高可见度的渠道；控制频率避免轰炸。</td>
+              <td>用签到式对话、每日规划固定环节，以及 macOS 本地通知；控制频率避免轰炸。</td>
             </tr>
             <tr>
               <td>成绩估算错误</td>
@@ -1218,8 +1621,8 @@
           <dt>MVP</dt><dd>最小可行产品（Minimum Viable Product）。</dd>
           <dt>LLM</dt><dd>大语言模型（Large Language Model）。</dd>
           <dt>MCP</dt><dd>模型上下文协议（Model Context Protocol），Codex 通过它挂载自定义工具。</dd>
-          <dt>Codex</dt><dd>OpenAI 开源编码/智能体框架（<code>openai/codex</code>），含 Rust 核心 codex-rs、Codex SDK 与 app-server，提供工具调用循环；本项目复用最新上游版本作为智能体运行时。</dd>
-          <dt>abg-agent-swarm</dt><dd>参考项目（Drive Master），基于 Codex 二次开发，提供聊天 UI 与 OAuth 集成的可复用集成范例。</dd>
+          <dt>Codex</dt><dd>OpenAI 开源编码/智能体框架（<code>openai/codex</code>），含 Rust 核心 codex-rs 与工具调用循环；本项目复用其本地智能体运行机制。</dd>
+          <dt>abg-agent-swarm</dt><dd>参考项目（Drive Master），基于 Codex 二次开发；本项目仅参考其聊天 UI 与工具编排模式，不复用其 Web/OAuth/多用户形态。</dd>
           <dt>时间块 / block</dt><dd>日程的基本单元，带元数据、可被智能体推理与移动。</dd>
           <dt>评分量规 / rubric</dt><dd>老师给出的评分标准，说明各部分如何计分。</dd>
           <dt>主要成绩项 / major grade</dt><dd>权重较高的成绩项（如大考、大项目）。</dd>
@@ -1237,8 +1640,8 @@
     </section>
 
     <div class="footer">
-      <p>讨论与迭代用 HLDD 草稿。推荐 MVP 是一个日程板加智能体循环：能拆分作业、安排时间块、解释决策，并响应自然语言的日程变化；实现基于 abg-agent-swarm（Codex）二次开发。</p>
-      <p class="muted"><strong>修订记录</strong>：v0.1（2026-06）初稿；v0.2（2026-07-01）经多视角评审修订——补充成功指标、排程算法方向、数据模型字段、工具契约、循环健壮性、风险与验收，统一术语、修正架构图箭头与英文版链接、新增目录与术语表；v0.3（2026-07-01）明确以上游 Codex 为运行时底座、abg-agent-swarm 提供聊天 UI 与 OAuth，并据此调整范围与风险，精简市场对比章节；v0.4（2026-07-01）第二轮验证评审后收敛——统一技术底座口径与复用边界（MCP 挂工具、净新增工作显式化）、把拖拽编辑与批量重排排入周 DoD、补充调度/并发/移动端风险、术语表补 LLM/MCP/ToS。</p>
+      <p>讨论与迭代用 HLDD 草稿。推荐 MVP 是一个个人版 Mac 桌面应用：本地日程板加智能体循环，能拆分作业、安排时间块、解释决策，并响应自然语言的日程变化。</p>
+      <p class="muted"><strong>修订记录</strong>：v0.1（2026-06）初稿；v0.2（2026-07-01）经多视角评审修订——补充成功指标、排程算法方向、数据模型字段、工具契约、循环健壮性、风险与验收，统一术语、修正架构图箭头与英文版链接、新增目录与术语表；v0.3（2026-07-01）明确以上游 Codex 为运行时底座、abg-agent-swarm 提供聊天 UI 与 OAuth，并据此调整范围与风险，精简市场对比章节；v0.4（2026-07-01）第二轮验证评审后收敛——统一技术底座口径与复用边界（MCP 挂工具、净新增工作显式化）、把拖拽编辑与批量重排排入周 DoD、补充调度/并发/移动端风险、术语表补 LLM/MCP/ToS；v0.5（2026-07-01）按用户确认收敛为个人版 macOS 桌面应用——移除 SaaS/Web/多用户/运维假设，改为本地 Codex + MCP、SQLite、Mac UI、本地通知与桌面验收标准。</p>
     </div>
   </main>
 </body>
