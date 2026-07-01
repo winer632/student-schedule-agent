@@ -521,7 +521,7 @@
             <strong>MVP</strong>：把手动/粘贴录入的作业与固定安排，通过确定性排程 + LLM 拆分转化为动态周日程，并能通过聊天修改计划、解释原因、可撤销。
           </p>
           <p class="muted" style="font-size:0.9rem">
-            <strong>愿景（路线图）</strong>：成绩感知优先级、随使用学习偏好、以及从 Schoology/日历自动聚合——这些差异化能力在 MVP 中为只读示例或未落地，不计入验收（见<a href="#s9">第 9 节</a>、<a href="#s11">第 11 节</a>、<a href="#s16">第 16 节</a>）。
+            <strong>愿景（路线图）</strong>：成绩感知优先级计算、随使用学习偏好、以及从日历自动聚合——这些差异化能力在 MVP 中为只读示例或未落地，不计入验收（见<a href="#s9">第 9 节</a>、<a href="#s11">第 11 节</a>、<a href="#s16">第 16 节</a>）。（真实 Schoology 作业/截止日期导入已属 MVP，见<a href="#s7">第 7 节</a>）
           </p>
         </div>
       </div>
@@ -1600,7 +1600,7 @@
             <tr>
               <td>Codex→MCP spike 失败或超期</td>
               <td>整套架构依赖本地 Codex→MCP 打通；受阻则 Week 1 无法启动。</td>
-              <td>Week 0 时间盒 ≤2 天；失败即走 fallback（瘦编排层直连 LLM tool-calling + 同一套 MCP 工具，见<a href="#s15">第 15 节</a>）。</td>
+              <td>Codex spike 时间盒 ≤2 天（在 ≤3 天的 Week 0 门槛内，与 Schoology 接入 spike 并行）；失败即走 fallback（瘦编排层直连 LLM tool-calling + 同一套 MCP 工具，见<a href="#s15">第 15 节</a>）。</td>
               <td>技术负责人 · 中/高 · Week 0 结束 spike 未跑通 <code>getSchedule()</code> 往返。</td>
             </tr>
             <tr>
@@ -1624,7 +1624,7 @@
             <tr>
               <td>公证 / 分发（Gatekeeper）</td>
               <td>未签名/未公证的演示包在目标 Mac 被 Gatekeeper 拦截，演示当天失败。</td>
-              <td>Week 3 提前完成签名/公证并在目标机验证放行（见<a href="#s15">第 15 节</a> Week 3）。</td>
+              <td>Week 4 提前完成签名/公证并在目标机验证放行（见<a href="#s15">第 15 节</a> Week 4）。</td>
               <td>交付负责人 · 中/高 · 演示前一天仍未在目标机跑通启动。</td>
             </tr>
             <tr>
@@ -1684,7 +1684,7 @@
             <tr>
               <td>无 QA / 回滚</td>
               <td>自动改日程的产品缺回归测试尤其危险。</td>
-              <td>Week 3 测试缓冲不可挤占，建关键路径回归用例，提供单步撤销/恢复。</td>
+              <td>Week 4 测试缓冲不可挤占，建关键路径回归用例，提供单步撤销/恢复。</td>
               <td>交付负责人 · 中/高 · 测试缓冲被开发超期吞没。</td>
             </tr>
           </tbody>
