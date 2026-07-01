@@ -1,0 +1,1245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>高层设计文档：学生日程规划智能体</title>
+  <style>
+    :root {
+      --bg: #f8f5ee;
+      --paper: #fffdf8;
+      --ink: #25211e;
+      --muted: #716b63;
+      --line: #ded3c2;
+      --soft: #eee6da;
+      --accent: #236b63;
+      --accent-2: #c85f3f;
+      --accent-3: #d49b1f;
+      --blue: #2f66c9;
+      --code: #f4eadc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+    }
+
+    main {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 44px 0 72px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 28px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 30px;
+      margin-bottom: 34px;
+    }
+
+    .eyebrow {
+      color: var(--accent-2);
+      font-size: 0.8rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 880px;
+      margin-top: 10px;
+      font-family: Georgia, "Times New Roman", "Songti SC", serif;
+      font-size: clamp(2.35rem, 6vw, 5rem);
+    }
+
+    h2 {
+      font-family: Georgia, "Times New Roman", "Songti SC", serif;
+      font-size: clamp(1.75rem, 3vw, 2.6rem);
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 1.02rem;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .subtitle {
+      max-width: 790px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .language-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 16px;
+    }
+
+    .language-box a {
+      display: inline-block;
+      margin-top: 6px;
+      font-weight: 750;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--paper);
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    section {
+      margin-top: 38px;
+      scroll-margin-top: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .span-3 {
+      grid-column: span 3;
+    }
+
+    .span-4 {
+      grid-column: span 4;
+    }
+
+    .span-5 {
+      grid-column: span 5;
+    }
+
+    .span-6 {
+      grid-column: span 6;
+    }
+
+    .span-7 {
+      grid-column: span 7;
+    }
+
+    .span-8 {
+      grid-column: span 8;
+    }
+
+    .span-12 {
+      grid-column: span 12;
+    }
+
+    .card {
+      height: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 18px;
+    }
+
+    .soft-card {
+      background: var(--soft);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .tag.p0 {
+      background: var(--accent-2);
+      color: #fff;
+    }
+
+    .tag.p1 {
+      background: var(--accent-3);
+      color: #fff;
+    }
+
+    .tag.p2 {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+
+    code {
+      border-radius: 5px;
+      background: var(--code);
+      padding: 2px 5px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr 52px 1fr 52px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 18px;
+    }
+
+    .arch-box {
+      min-height: 210px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 18px;
+    }
+
+    .arch-box h3 {
+      color: var(--accent);
+    }
+
+    .arrow {
+      display: grid;
+      place-items: center;
+      color: var(--accent-2);
+      font-size: 2rem;
+      font-weight: 850;
+    }
+
+    .loop {
+      counter-reset: loop;
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .loop-step {
+      position: relative;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      background: var(--paper);
+      padding: 14px 16px 14px 50px;
+    }
+
+    .loop-step::before {
+      counter-increment: loop;
+      content: counter(loop);
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .table {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    table {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+    }
+
+    caption {
+      caption-side: top;
+      padding: 12px 14px 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .callout {
+      border: 1px solid #dfb8a4;
+      border-left: 5px solid var(--accent-2);
+      border-radius: 8px;
+      background: #fff5ef;
+      padding: 18px;
+    }
+
+    .phase {
+      border-top: 4px solid var(--accent-3);
+    }
+
+    .phase:nth-child(2) {
+      border-top-color: var(--accent);
+    }
+
+    .phase:nth-child(3) {
+      border-top-color: var(--accent-2);
+    }
+
+    .toc {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      padding: 18px 20px;
+      margin-top: 24px;
+    }
+
+    .toc ol {
+      columns: 2;
+      column-gap: 32px;
+      margin-top: 6px;
+    }
+
+    .toc li {
+      margin: 4px 0;
+      break-inside: avoid;
+    }
+
+    .doc-info {
+      margin-top: 22px;
+    }
+
+    dl.glossary {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 10px 18px;
+      margin: 12px 0 0;
+    }
+
+    dl.glossary dt {
+      font-weight: 750;
+      color: var(--accent);
+    }
+
+    dl.glossary dd {
+      margin: 0;
+    }
+
+    .footer {
+      margin-top: 42px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        width: min(100% - 28px, 1160px);
+        padding-top: 30px;
+      }
+
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .span-3,
+      .span-4,
+      .span-5,
+      .span-6,
+      .span-7,
+      .span-8,
+      .span-12 {
+        grid-column: span 12;
+      }
+
+      .architecture {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        min-height: 32px;
+      }
+
+      .toc ol {
+        columns: 1;
+      }
+
+      dl.glossary {
+        grid-template-columns: 1fr;
+        gap: 2px 0;
+      }
+
+      dl.glossary dd {
+        margin-bottom: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <div class="eyebrow">高层设计文档 · High-Level Design Document</div>
+        <h1>学生日程规划智能体</h1>
+        <p class="subtitle">
+          一个面向学生的规划助手：它导入学校任务，理解目标与限制，把大型作业拆成可执行的时间块，并通过对话持续维护一个动态日程。
+        </p>
+        <div class="meta">
+          <span class="pill">原型周期：3 周</span>
+          <span class="pill">核心用户：高中生</span>
+          <span class="pill">主要集成：Schoology</span>
+          <span class="pill">技术底座：OpenAI Codex + abg-agent-swarm</span>
+        </div>
+        <div class="doc-info table" style="margin-top:20px">
+          <table style="min-width:0">
+            <caption>文档元信息</caption>
+            <tbody>
+              <tr><th scope="row">版本</th><td>v0.4（草稿）</td><th scope="row">状态</th><td>评审通过 / 可启动开发</td></tr>
+              <tr><th scope="row">创建日期</th><td>2026-06</td><th scope="row">最近更新</th><td>2026-07-01</td></tr>
+              <tr><th scope="row">负责人</th><td>产品与工程原型小组</td><th scope="row">读者</th><td>产品、工程评审</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="language-box">
+        <h3>语言版本</h3>
+        <p class="muted">英文对照版本正在编写中，完成后将在此提供链接。</p>
+        <span class="muted" aria-disabled="true">English version — coming soon</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="目录">
+      <h3>目录</h3>
+      <ol>
+        <li><a href="#s1">产品愿景</a></li>
+        <li><a href="#s2">要解决的问题</a></li>
+        <li><a href="#s3">目标与非目标</a></li>
+        <li><a href="#s4">高层架构</a></li>
+        <li><a href="#s5">核心概念：时间块</a></li>
+        <li><a href="#s6">智能体循环</a></li>
+        <li><a href="#s7">Schoology 集成策略</a></li>
+        <li><a href="#s8">日程智能</a></li>
+        <li><a href="#s9">成绩感知规划</a></li>
+        <li><a href="#s10">消息抽象层</a></li>
+        <li><a href="#s11">智能体工具</a></li>
+        <li><a href="#s12">数据模型</a></li>
+        <li><a href="#s13">智能体安全与可控性</a></li>
+        <li><a href="#s14">成功指标与验收标准</a></li>
+        <li><a href="#s15">三周 MVP 计划</a></li>
+        <li><a href="#s16">长期路线图</a></li>
+        <li><a href="#s17">风险与缓解</a></li>
+        <li><a href="#s18">演示脚本</a></li>
+        <li><a href="#s19">术语表</a></li>
+      </ol>
+    </nav>
+
+    <section id="s1">
+      <h2>1. 产品愿景</h2>
+      <div class="grid">
+        <div class="card span-8">
+          <span class="tag">概述</span>
+          <p>
+            这个产品是一个面向学生的 AI 日程智能体。它把学校作业、成绩、固定安排、个人偏好以及临时变动整合进一个主日程。它不只是展示任务列表，而是主动推理工作应该安排在什么时候，解释原因，在不确定时提问，并根据用户调整逐渐学习。
+          </p>
+          <p>
+            第一版专注于学校场景，尤其是与 Schoology 相关的工作流。长期来看，它可以扩展成任何人都能使用的任务与时间规划助手（迁移路径见<a href="#s16">第 16 节</a>）。
+          </p>
+        </div>
+        <div class="card span-4 soft-card">
+          <span class="tag">一句话定位</span>
+          <p>
+            一个能把学校平台、作业、评分量规（rubric）、成绩和个人生活安排转化为动态日程，并能通过聊天修改计划的智能体。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s2">
+      <h2>2. 要解决的问题</h2>
+      <p class="muted">
+        以下问题陈述目前基于团队假设，尚未经过系统性用户研究验证。<strong>MVP 前置动作</strong>：对 5–10 名目标高中生做轻量访谈，确认核心痛点究竟是“不知道何时学”（规划问题）还是“知道却做不到”（执行力/拖延问题）——二者对应的产品形态差异很大。
+      </p>
+      <div class="grid">
+        <div class="card span-4">
+          <h3>信息来源太分散</h3>
+          <p>
+            学生的任务分散在 Schoology、日历、教学大纲、老师公告、PDF、成绩册、体育训练、家庭安排和口头提醒里。
+          </p>
+        </div>
+        <div class="card span-4">
+          <h3>日历不会主动规划</h3>
+          <p>
+            普通日历能显示截止日期，但不会决定什么时候研究、起草、复习、拍摄、编辑，也不会在计划被打乱后自动重排。
+          </p>
+        </div>
+        <div class="card span-4">
+          <h3>普通提醒容易被忽略</h3>
+          <p>
+            学生已经收到太多通知，所以单纯的提醒很容易被无视。系统需要更像对话，有上下文，并且能适应用户习惯，才可能真正影响行为。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s3">
+      <h2>3. 目标与非目标</h2>
+      <p class="muted">
+        目标区分“MVP 必达”与“愿景方向”，与<a href="#s15">第 15 节</a>的逐周交付物对齐，避免过度承诺。
+      </p>
+      <div class="grid">
+        <div class="card span-6">
+          <h3>目标 · MVP 必达</h3>
+          <ul>
+            <li>创建一个主周日程，合并固定安排与学校任务。</li>
+            <li>支持手动录入或粘贴作业信息；提供模拟 Schoology 数据。</li>
+            <li>根据作业描述和评分量规，把大型任务拆成更小的工作块。</li>
+            <li>允许用户手动拖动、拉伸、删除和编辑时间块。</li>
+            <li>允许用户用自然语言和智能体对话，例如“我周六下午 5–8 点要出去”。</li>
+            <li>解释每个时间块为什么被安排在那里，并显示不确定性。</li>
+          </ul>
+          <h3 style="margin-top:14px">目标 · 愿景方向（探索/演示级）</h3>
+          <ul>
+            <li>随着使用学习偏好，例如“我喜欢跑步后做数学”（MVP 仅做记录，不做可信学习闭环）。</li>
+            <li>成绩感知优先级估算（MVP 以只读示例演示，不承诺真实计算，见<a href="#s9">第 9 节</a>）。</li>
+            <li>在可行时从 Schoology 官方 API 导入作业、截止日期、活动和成绩。</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h3>第一版不做什么（非目标）</h3>
+          <p class="muted" style="font-size:0.92rem">按“渠道 / 能力 / 依赖 / 用户范围 / 平台”分类：</p>
+          <ul>
+            <li><strong>渠道</strong>：不做非官方的个人微信、Instagram、Snapchat 机器人集成（官方渠道属未来路线图，见<a href="#s16">第 16 节</a>）。</li>
+            <li><strong>能力</strong>：不自动提交作业或修改成绩；不承诺精确预测 GPA（平均学分绩点）；不在没有用户确认的情况下做重大计划变更。</li>
+            <li><strong>依赖</strong>：MVP 不依赖学校管理员批准 API 权限，也不依赖浏览器插件抓取。</li>
+            <li><strong>用户范围</strong>：不做家长端 / 老师端，不做多人协作与小组作业协同。</li>
+            <li><strong>平台</strong>：不做移动原生 App；MVP 为网页应用（移动端策略见下方说明）。</li>
+          </ul>
+          <p class="muted" style="font-size:0.92rem;margin-top:8px">
+            移动端说明：高中生是移动优先人群，桌面网页形态可能与实际使用环境错配。MVP 采用<strong>响应式网页</strong>以在手机浏览器可用，原生 App 列入路线图；此风险在<a href="#s17">第 17 节</a>登记。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="s4">
+      <h2>4. 高层架构</h2>
+      <p class="muted">
+        系统设计的关键是：智能体可以接入多个数据来源和多个消息渠道，但核心日程模型保持稳定。下图三层之间为数据/调用流向。
+      </p>
+      <div class="architecture">
+        <div class="arch-box">
+          <h3>客户端层</h3>
+          <p>学生查看和编辑计划的地方。</p>
+          <ul>
+            <li>响应式网页日程板</li>
+            <li>应用内聊天</li>
+            <li>拖拽式日历界面</li>
+            <li>应用内提醒（MVP）</li>
+            <li>可选浏览器插件（路线图）</li>
+          </ul>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="arch-box">
+          <h3>后端与智能体层</h3>
+          <p>推理与编排发生的地方。</p>
+          <ul>
+            <li>Codex app-server（智能体运行时 + 工具调用循环）</li>
+            <li>身份认证与授权（会话、多用户隔离）</li>
+            <li>LLM 推理服务（模型、上下文/记忆、成本预算）</li>
+            <li>日程状态存储（持久化 + 版本/乐观并发）</li>
+            <li>调度引擎（定时提醒、重排触发）</li>
+            <li>日程工具 / Schoology 导入工具 / 偏好记忆</li>
+            <li>消息抽象层 · 可观测性（日志/追踪/评估）</li>
+          </ul>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="arch-box">
+          <h3>集成层</h3>
+          <p>应用可以读取或写入的外部系统。</p>
+          <ul>
+            <li>Schoology 官方 API（OAuth 1.0）或插件导入</li>
+            <li>Apple / Google Calendar（双向同步）</li>
+            <li>未来的邮件或短信</li>
+            <li>未来的官方微信或其他消息平台</li>
+            <li>数据库</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          <strong>技术底座与复用边界</strong>：智能体运行时基于<strong>最新上游 OpenAI Codex</strong>（<code>openai/codex</code>，含 Rust 核心 <code>codex-rs</code>、Codex SDK 与 app-server），仅复用其<strong>“LLM → 工具 → 结果”的工具调用循环机制</strong>；<strong>聊天 UI 与 OAuth 集成</strong>复用 <code>abg-agent-swarm</code>（Drive Master）的现成实现与模式。日程相关的自定义工具<strong>经 MCP server 暴露给 Codex 调用，尽量不 fork codex-rs 核心</strong>。
+        </p>
+        <p>
+          需要说明的是，Codex 本质是<strong>单用户编码智能体</strong>，因此<strong>多用户会话隔离、领域数据持久化、调度引擎（定时提醒）属于本项目的净新增工作量</strong>，非底座自带。本项目还需新增学校日程特定部分：时间块模型、拖拽日历界面、Schoology 导入工具与日程工具。底座省去的是运行时循环与前端骨架，但上述封装仍需投入（见<a href="#s17">第 17 节</a>风险）。
+        </p>
+      </div>
+      <p class="muted" style="margin-top:12px">
+        <strong>非功能性方向（原型阶段的量级假设）</strong>：单区域部署，支持数百名试点用户；为 LLM 调用设定 token 预算与缓存策略（见<a href="#s17">第 17 节</a>成本风险）；外部日历双向同步须定义权威源与冲突解决策略（后端改动 vs 外部改动以谁为准）。
+      </p>
+    </section>
+
+    <section id="s5">
+      <h2>5. 核心概念：时间块</h2>
+      <p class="muted">
+        日程由“时间块”（block）组成。每个承诺、作业步骤、学习安排和临时变动都变成一个带有元数据的时间块，智能体可以对它进行推理。周期性事件（上课、睡觉、训练）通过重复规则（RRULE）表示，而非逐次复制。
+      </p>
+      <div class="table">
+        <table>
+          <caption>时间块类型</caption>
+          <thead>
+            <tr>
+              <th scope="col">时间块类型</th>
+              <th scope="col">例子</th>
+              <th scope="col">是否可移动</th>
+              <th scope="col">来源</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>固定时间块</td>
+              <td>上课、睡觉、田径训练、家庭活动</td>
+              <td>通常不可移动</td>
+              <td>用户、日历、Schoology</td>
+            </tr>
+            <tr>
+              <td>导入的截止日期</td>
+              <td>生物纪录片周五截止</td>
+              <td>截止日期固定，工作时间可移动</td>
+              <td>Schoology、插件、手动导入</td>
+            </tr>
+            <tr>
+              <td>生成的工作块</td>
+              <td>研究主题、拍摄采访、剪辑视频</td>
+              <td>可移动</td>
+              <td>智能体</td>
+            </tr>
+            <tr>
+              <td>灵活习惯块</td>
+              <td>健身、阅读、复习、补作业</td>
+              <td>可移动</td>
+              <td>用户或智能体</td>
+            </tr>
+            <tr>
+              <td>临时变动</td>
+              <td>“周六下午 5–8 点出去玩”</td>
+              <td>通常固定</td>
+              <td>用户聊天</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s6">
+      <h2>6. 智能体循环</h2>
+      <p class="muted">
+        这个产品是具备自主行动能力的（agentic）：模型拥有工具、状态和维护日程的责任，而不只是回答问题。循环由 Codex 的工具调用机制承载，但每一步都要处理失败、冲突与并发。
+      </p>
+      <div class="loop">
+        <div class="loop-step">
+          <strong>观察：</strong>导入新作业、日历事件、成绩、用户消息和手动修改。外部导入内容一律标记为不可信输入（见<a href="#s13">第 13 节</a>）。
+        </div>
+        <div class="loop-step">
+          <strong>理解：</strong>识别截止日期、工作量、难度、依赖关系、成绩影响和用户偏好。
+        </div>
+        <div class="loop-step">
+          <strong>规划：</strong>在尊重固定安排和时间限制的前提下创建或调整时间块。
+        </div>
+        <div class="loop-step">
+          <strong>校验与消解：</strong>在执行前做约束校验——检测时间重叠、是否超出可用时间、是否越过截止日期，并对冲突进行裁决（确定性规则优先，见<a href="#s8">第 8 节</a>）。
+        </div>
+        <div class="loop-step">
+          <strong>解释：</strong>为每个安排附上原因和信心程度。
+        </div>
+        <div class="loop-step">
+          <strong>提问：</strong>当不确定性较高时，提出具体问题，而不是随便猜。
+        </div>
+        <div class="loop-step">
+          <strong>执行：</strong>更新日程、提醒和可选的日历输出。对外部写入使用幂等键（重复执行不产生重复事件），失败时重试并可回退。
+        </div>
+        <div class="loop-step">
+          <strong>学习：</strong>根据用户修改和完成情况改进之后的计划。
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          <strong>健壮性约定</strong>：①工具调用失败/超时按可重试性与幂等键处理；②“规划”与新的用户输入之间存在竞态时，以最新的用户意图为准并重新校验；③写入采用乐观并发控制（基于版本号），冲突时拒绝并提示，而非静默覆盖（数据模型见<a href="#s12">第 12 节</a>）。
+        </p>
+      </div>
+    </section>
+
+    <section id="s7">
+      <h2>7. Schoology 集成策略</h2>
+      <div class="grid">
+        <div class="card span-4">
+          <span class="tag">MVP 模式</span>
+          <h3>手动或模拟导入</h3>
+          <p>
+            使用样例数据或用户粘贴的作业信息（可让智能体解析粘贴的教学大纲以降低录入摩擦）。这样即使还没有学校管理员权限，也可以先验证日程和智能体逻辑。
+          </p>
+        </div>
+        <div class="card span-4">
+          <span class="tag">原型模式（路线图）</span>
+          <h3>浏览器插件导入</h3>
+          <p>
+            学生正常登录 Schoology，插件只读取学生已经能看到的页面内容并提取结构化数据。该路径受服务条款（ToS）限制，须先做评审，非 MVP 范围。
+          </p>
+        </div>
+        <div class="card span-4">
+          <span class="tag">生产模式</span>
+          <h3>官方 API 集成</h3>
+          <p>
+            如果学校批准访问，后端使用 Schoology 官方 API 和 OAuth 1.0 流程，更稳定地读取课程、作业、成绩、事件和提交信息。
+          </p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          Schoology 开发者文档包含 REST API、OAuth 1.0 认证、作业接口例如 <code>sections/{section_id}/assignments</code>，以及成绩、课程、用户相关接口。
+        </p>
+        <p>
+          <strong>OAuth 1.0 说明</strong>：Schoology 使用 OAuth 1.0（HMAC-SHA1 签名），已被业界普遍以 OAuth 2.0 取代。consumer key/secret 与 token 存放在服务端、绝不下发到客户端或插件，并定义撤销与轮换机制。abg-agent-swarm 的 Drive OAuth 属 OAuth 2.0，<strong>Calendar 授权可较直接复用其模式；Schoology 的 OAuth 1.0 需另实现签名流程</strong>，仅复用 token 服务端保管/撤销/轮换这套结构。
+        </p>
+        <p>
+          <strong>健壮性</strong>：插件抓取须对选择器容错、对返回数据做 schema 校验、解析失败时降级为手动导入；API 集成须处理速率限制（指数退避、增量同步/ETag、合理轮询间隔）。
+        </p>
+        <p>
+          参考链接：<a href="https://developers.schoology.com/api/">Schoology API Documentation</a>，
+          <a href="https://developers.schoology.com/api-documentation/authentication/">Authentication</a>，
+          <a href="https://developers.schoology.com/api-documentation/rest-api-v1/">REST API</a>。
+        </p>
+      </div>
+    </section>
+
+    <section id="s8">
+      <h2>8. 日程智能</h2>
+      <div class="grid">
+        <div class="card span-6">
+          <h3>输入</h3>
+          <ul>
+            <li>固定日程：睡觉、上课、运动、通勤、吃饭。</li>
+            <li>学校数据：作业、截止日期、评分分类、成绩、评分量规。</li>
+            <li>用户目标：“我想拿 4.0” 或 “我 AP 微积分 BC 要拿 A”。</li>
+            <li>用户偏好：最佳专注时间、不喜欢的工作时间、学科顺序。</li>
+            <li>现实变动：“我周六下午 5–8 点要出去”。</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h3>输出</h3>
+          <ul>
+            <li>有开始和结束时间的日程块。</li>
+            <li>大型作业和项目的子任务。</li>
+            <li>基于紧急程度、工作量和成绩影响的优先级。</li>
+            <li>解释每个时间块为什么被安排在那里。</li>
+            <li>当计划依赖未知信息时提出问题。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          <strong>排程质量从哪里来（方向性说明）</strong>：这是产品的真正难点。MVP 采用<strong>“确定性约束 + LLM 分工”</strong>的混合方式：LLM 负责<em>作业拆分</em>与<em>原因解释</em>；确定性逻辑负责<em>把子任务放进不冲突的可用时段</em>（尊重固定块、截止日期、每日工作上限）。工作量估算来源优先级：用户输入 &gt; 历史完成数据 &gt; 从评分量规/作业类型推断的默认值。多约束冲突时按“临近截止日期 + 成绩影响 + 用户偏好”排序，并以人工确认兜底。<strong>注：MVP 阶段成绩计算未落地（见<a href="#s9">第 9 节</a>），排序退化为“临近截止日期 + 用户偏好”，成绩影响待真实计算落地后接入。</strong> MVP 接受“排得不完美”，但要求可解释、可撤销。
+        </p>
+      </div>
+    </section>
+
+    <section id="s9">
+      <h2>9. 成绩感知规划</h2>
+      <p class="muted">
+        成绩感知规划应该被视为估算，而不是保证。系统需要展示假设，让学生可以修正。<strong>MVP 中此功能以只读示例演示，不实现真实计算逻辑</strong>（见<a href="#s15">第 15 节</a>），以控制范围与伦理风险。
+      </p>
+      <div class="grid">
+        <div class="card span-7">
+          <h3>例子</h3>
+          <p>
+            如果学生生物有 98，但 AP 微积分 BC 只有 91，而微积分考试又属于主要成绩项（major grade），智能体可以优先安排微积分复习，并解释原因：
+          </p>
+          <blockquote style="margin:0;padding:12px 14px;border-left:4px solid var(--accent);background:var(--paper)">
+            我优先安排微积分复习，因为你目前接近 A 的分数线，而且这次考试属于主要成绩项（major）类别。
+          </blockquote>
+        </div>
+        <div class="card span-5">
+          <h3>基线算法与保护措施</h3>
+          <ul>
+            <li><strong>基线启发式（未来真实计算方向，MVP 不实现）</strong>：优先级得分 = 分类权重 × 距目标成绩的差距 × 剩余可得分；权重来源须由用户确认或采用默认模板。</li>
+            <li>数据缺失时给出不确定性区间，并标记为估算。</li>
+            <li>让用户确认评分量规和分类权重。</li>
+            <li>不要承诺精确的最终成绩。</li>
+            <li>允许用户编辑每位老师的特殊规则。</li>
+            <li>关注学生心理：避免以分数驱动过度挤压，必要时可关闭该功能。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="s10">
+      <h2>10. 消息抽象层</h2>
+      <p class="muted">
+        智能体不应该直接绑定某一个平台。它应该通过一个消息层发送提醒，这样原型现在能工作，将来也能添加更多渠道。
+      </p>
+      <div class="grid">
+        <div class="card span-6">
+          <h3>概念</h3>
+          <p>
+            智能体只调用一个内部函数，例如 <code>sendMessage(user, message, options)</code>。消息系统再决定通过应用内聊天、应用内提醒、邮件、短信、官方微信或其他未来渠道发送。
+          </p>
+        </div>
+        <div class="card span-6">
+          <h3>第一版实现与投递语义</h3>
+          <ul>
+            <li>先实现应用内聊天与应用内提醒（MVP 不依赖浏览器推送）。</li>
+            <li>由调度引擎触发定时提醒（如“到微积分复习时间了”）。</li>
+            <li>定义投递语义：失败重试、渠道降级（fallback）、去重与频率控制（安静时段 / 每日上限），避免<a href="#s2">第 2 节</a>所说的“提醒轰炸”。</li>
+            <li>接口预留短信、官方微信或邮件的接入位置。</li>
+            <li>MVP 不使用非官方的个人微信或 Instagram 机器人。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="s11">
+      <h2>11. 智能体工具</h2>
+      <p class="muted">
+        下表为工具概览。工具经 <strong>MCP server</strong> 暴露给 Codex 调用（不 fork codex-rs 核心）。每个工具在实现前须补全契约：输入/输出 schema、错误码、是否需用户确认、是否幂等。带副作用的工具（写日历、发消息、批量重排）默认需要确认。
+      </p>
+      <div class="table">
+        <table>
+          <caption>智能体工具</caption>
+          <thead>
+            <tr>
+              <th scope="col">工具</th>
+              <th scope="col">用途</th>
+              <th scope="col">例子</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getSchedule()</code></td>
+              <td>读取当前日程块和限制。</td>
+              <td>寻找周五前的空闲时间。</td>
+            </tr>
+            <tr>
+              <td><code>getAssignments()</code></td>
+              <td>查询作业、截止日期与状态。</td>
+              <td>列出本周到期的所有作业。</td>
+            </tr>
+            <tr>
+              <td><code>createBlock()</code></td>
+              <td>添加学习块或固定事件。</td>
+              <td>添加周二 19:00–20:30 的微积分复习。</td>
+            </tr>
+            <tr>
+              <td><code>moveBlock()</code></td>
+              <td>在冲突或用户请求后重排时间块。</td>
+              <td>把生物研究移动到晚饭后。</td>
+            </tr>
+            <tr>
+              <td><code>deleteBlock()</code></td>
+              <td>删除时间块。</td>
+              <td>删除已取消的训练。</td>
+            </tr>
+            <tr>
+              <td><code>batchReschedule()</code></td>
+              <td>作为单一原子操作批量重排多个块。</td>
+              <td>临时新增紧急作业后一次性重排本周。</td>
+            </tr>
+            <tr>
+              <td><code>splitAssignment()</code></td>
+              <td>把大型作业拆成子任务。</td>
+              <td>把纪录片拆成规划、研究、拍摄、剪辑。</td>
+            </tr>
+            <tr>
+              <td><code>setPreference()</code></td>
+              <td>存储从聊天或编辑中学到的偏好。</td>
+              <td>偏好跑步后做数学。</td>
+            </tr>
+            <tr>
+              <td><code>askClarifyingQuestion()</code></td>
+              <td>在不确定性太高时提问。</td>
+              <td>询问拍摄需要 2 小时还是 4 小时。</td>
+            </tr>
+            <tr>
+              <td><code>undo()</code></td>
+              <td>撤销上一步智能体操作（依赖操作历史）。</td>
+              <td>撤销刚才的自动重排。</td>
+            </tr>
+            <tr>
+              <td><code>sendMessage()</code></td>
+              <td>通过消息层通知或对话。</td>
+              <td>“到微积分复习时间了，还按原计划吗？”</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s12">
+      <h2>12. 数据模型</h2>
+      <div class="table">
+        <table>
+          <caption>核心实体与关键字段</caption>
+          <thead>
+            <tr>
+              <th scope="col">实体</th>
+              <th scope="col">关键字段</th>
+              <th scope="col">说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User</td>
+              <td>姓名、时区、目标、通知设置</td>
+              <td>存储个人规划偏好。</td>
+            </tr>
+            <tr>
+              <td>Block</td>
+              <td>标题、类型、开始、结束、时区、重复规则(RRULE)、预计时长、实际时长、依赖(dependsOn)、优先级、是否可移动、来源、状态/完成、信心、原因、版本、更新时间/更新者、关联作业(assignmentId)</td>
+              <td>核心日程对象；版本与更新者支撑乐观并发与冲突检测（见<a href="#s6">第 6 节</a>）。</td>
+            </tr>
+            <tr>
+              <td>Assignment</td>
+              <td>标题、课程、带时区的截止时间、描述、评分量规、分数、类别、预计工时、子任务关联、状态</td>
+              <td>可以导入或手动创建。</td>
+            </tr>
+            <tr>
+              <td>Preference</td>
+              <td>规则、表示形式（结构化约束/自然语言）、强度、证据、应用方式、更新时间</td>
+              <td>可以从用户编辑或聊天中学习；须定义如何影响规划与冲突取舍。</td>
+            </tr>
+            <tr>
+              <td>Grade Context</td>
+              <td>课程、当前成绩、目标成绩、分类权重、评分量规</td>
+              <td>用于优先级估算。</td>
+            </tr>
+            <tr>
+              <td>Message</td>
+              <td>发送者、文本、时间、渠道、投递状态、相关时间块</td>
+              <td>支持对话式规划。</td>
+            </tr>
+            <tr>
+              <td>ActionLog</td>
+              <td>操作者(用户/智能体)、动作、变更前后(before/after)、时间戳</td>
+              <td>同时支撑撤销（undo）与操作审计，落地<a href="#s13">第 13 节</a>的撤销/日志能力。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s13">
+      <h2>13. 智能体安全与可控性</h2>
+      <p class="muted">
+        智能体会自动修改用户日程，因此可控性与可信任是产品能被采纳的前提。本节关注智能体的行为安全与可控性。
+      </p>
+      <div class="grid">
+        <div class="card span-6">
+          <h3>可控性原则</h3>
+          <ul>
+            <li>重大日程变更需要用户确认。</li>
+            <li>为生成计划显示信心程度和原因。</li>
+            <li>保留撤销历史（由 ActionLog 支撑），支持一键回退。</li>
+            <li>记录智能体操作，便于调试和建立信任。</li>
+            <li>MVP 不让智能体提交作业或给老师发消息。</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h3>输入与工具防护</h3>
+          <ul>
+            <li>作业描述、抓取页面等外部内容为不可信输入，与指令隔离（结构化封装/分隔），防止 prompt injection 操纵智能体。</li>
+            <li>高副作用工具（<code>sendMessage</code>、写日历、批量重排）强制确认与权限边界。</li>
+            <li>对工具输出做校验（时间合法、无越界），异常时回退到人工确认。</li>
+            <li>为智能体决策保留可观测性（日志/追踪），便于回归与排错。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="s14">
+      <h2>14. 成功指标与验收标准</h2>
+      <p class="muted">
+        没有可衡量的成功标准，项目结束时就无法判断成败。以下区分“原型验证指标”与“未来产品北向指标”。
+      </p>
+      <div class="grid">
+        <div class="card span-6">
+          <h3>原型（MVP）验收指标</h3>
+          <ul>
+            <li><strong>硬性门槛</strong>：<a href="#s18">第 18 节</a>演示脚本可端到端无人工干预跑通。</li>
+            <li><strong>拆分质量</strong>：给定一个带评分量规的作业，智能体拆出 ≥4 个合理子任务且时间估算被用户认可。</li>
+            <li><strong>接受率（北极星雏形）</strong>：AI 生成的时间块中被用户直接接受（未重排/删除）的比例，原型期观测参考 ≥60%，作为<strong>观测项而非 go/no-go 门槛</strong>。</li>
+            <li><strong>数据持久化</strong>：录入的作业与时间块刷新后不丢失。</li>
+          </ul>
+        </div>
+        <div class="card span-6">
+          <h3>未来产品北向指标</h3>
+          <ul>
+            <li>采纳与留存（如次周留存）。</li>
+            <li>计划被接受 vs 被修改的比例（衡量排程质量）。</li>
+            <li>行为影响：按计划完成的时间块比例（衡量是否真的影响行为）。</li>
+            <li>拆分与工时估算的准确度随使用提升。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="s15">
+      <h2>15. 三周 MVP 计划</h2>
+      <p class="muted">
+        <strong>技术底座</strong>：智能体运行时基于上游 <code>openai/codex</code>（复用工具调用循环），聊天 UI 与 OAuth 复用 <code>abg-agent-swarm</code> 现成实现；因此三周聚焦于<strong>学校日程特定功能</strong>（时间块模型、拖拽日历、Schoology 导入、日程工具与排程逻辑）以及<strong>多用户封装 / 持久化 / 调度引擎</strong>等净新增工作，范围压力较从零开发显著降低。<strong>人力假设</strong>：1–2 名全职原型开发者。<strong>范围策略</strong>：先做透一条最小可信循环（P0），其余标注为 P1/Stretch 或移入路线图；每周给出可验证的完成定义（DoD）。
+      </p>
+      <div class="grid">
+        <div class="card phase span-4">
+          <span class="tag p0">Week 1 · P0</span>
+          <h3>日程基础</h3>
+          <ul>
+            <li>在 Codex 底座上接好聊天/后端骨架，跑通一个自定义 MCP 工具被 Codex 调用（底座验证点）。</li>
+            <li>创建响应式网页日程板与固定周日程设置；支持点击编辑面板修改时间块（自由拖拽为增强项）。</li>
+            <li>手动作业输入或模拟 Schoology 数据（锁定此路径，不做插件）；把所有任务表示为时间块并持久化。</li>
+          </ul>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：跑通一个 MCP 工具调用；用户可录入 5 个作业、在周视图看到对应时间块并能编辑其时间；刷新后数据仍在。</p>
+        </div>
+        <div class="card phase span-4">
+          <span class="tag p0">Week 2 · P0</span>
+          <h3>智能体规划</h3>
+          <ul>
+            <li>以 MCP 工具注册创建/移动/删除时间块的日程工具。</li>
+            <li>把大型作业拆成子任务，附原因说明与信心标签。</li>
+            <li>实现冲突检测与原子批量重排（<code>batchReschedule</code>）。</li>
+            <li>添加通过聊天修改日程的命令；为 LLM 规划建立小型评测集（若干标准案例）。</li>
+          </ul>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：给定 1 个作业，端到端“拆分→排入日程→解释理由”，能响应一次自然语言改期；新增一个紧急作业能触发一次成功的批量重排消解冲突。</p>
+        </div>
+        <div class="card phase span-4">
+          <span class="tag p1">Week 3 · P1 + 收尾</span>
+          <h3>集成、测试与演示</h3>
+          <ul>
+            <li>应用内提醒（浏览器推送移入路线图）。</li>
+            <li>成绩感知优先级：只读示例（不实现真实计算）。</li>
+            <li><strong>预留 20–30% 时间做测试与修 bug</strong>；打磨 UI 与演示流程。</li>
+            <li>准备最终展示与限制说明。</li>
+          </ul>
+          <p class="muted" style="font-size:0.9rem"><strong>DoD</strong>：演示脚本全部跑通；关键路径有回归用例；智能体错误排程可撤销恢复。</p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:16px">
+        <p>
+          <strong>MVP Gate（go / no-go）</strong>：三周结束时按<a href="#s14">第 14 节</a>验收指标评估，决定是否继续、进入路线图哪个阶段。降级/移出 MVP 的项：浏览器通知、真实成绩感知计算、偏好学习闭环、Schoology 插件与官方 API。
+        </p>
+      </div>
+    </section>
+
+    <section id="s16">
+      <h2>16. 长期路线图</h2>
+      <div class="grid">
+        <div class="card span-3">
+          <h3>Schoology API</h3>
+          <p>在学校批准后，使用官方 OAuth/API 集成。</p>
+        </div>
+        <div class="card span-3">
+          <h3>浏览器插件</h3>
+          <p>在完成 ToS 评审后，为无管理员集成的用户导入可见 Schoology 数据。</p>
+        </div>
+        <div class="card span-3">
+          <h3>消息渠道</h3>
+          <p>通过抽象层添加短信、邮件、官方微信或其他渠道。</p>
+        </div>
+        <div class="card span-3">
+          <h3>通用规划器</h3>
+          <p>扩展到实习、工作项目、社团和个人目标（可迁移资产：时间块模型、智能体循环、消息层）。</p>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:12px">
+        里程碑衔接：MVP → <strong>MVP Gate 评估</strong> → 依据结果依次推进上述阶段，每阶段有前置条件（如学校授权）与成功标准。
+      </p>
+    </section>
+
+    <section id="s17">
+      <h2>17. 风险与缓解</h2>
+      <div class="table">
+        <table>
+          <caption>风险登记册</caption>
+          <thead>
+            <tr>
+              <th scope="col">风险</th>
+              <th scope="col">影响</th>
+              <th scope="col">缓解方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>范围管理（3 周）</td>
+              <td>仍需在期限内交付；日程特定部分（拖拽日历、拆分质量、排程逻辑）是主要工作量。</td>
+              <td>复用 abg-agent-swarm（Codex）底座省去运行时/聊天 UI/OAuth 从零开发；锁定 P0 最小循环，其余移入路线图。</td>
+            </tr>
+            <tr>
+              <td>底座契合度 / 适配成本</td>
+              <td>Codex 是单用户编码智能体，包装成多用户 + 定时提醒的 Web 服务需额外适配；熟悉其构建与 MCP 工具注册也有学习曲线。</td>
+              <td>日程工具走 MCP、不 fork 核心；Week 1 设底座验证点；把多用户封装/持久化/调度作为净新增显式排期。</td>
+            </tr>
+            <tr>
+              <td>后台调度可靠性</td>
+              <td>定时提醒需在进程重启后仍可触发，否则提醒丢失。</td>
+              <td>使用成熟定时/队列组件，提醒设计为幂等可重放。</td>
+            </tr>
+            <tr>
+              <td>并发写冲突</td>
+              <td>用户拖拽与智能体自动重排同时发生可能互相覆盖。</td>
+              <td>基于版本号的乐观并发控制，冲突时拒绝并提示，而非静默覆盖。</td>
+            </tr>
+            <tr>
+              <td>移动端形态错配</td>
+              <td>桌面网页与高中生移动优先习惯错配，影响采纳。</td>
+              <td>MVP 采用响应式网页保证手机可用；原生 App 列入路线图。</td>
+            </tr>
+            <tr>
+              <td>LLM 成本与延迟</td>
+              <td>每次循环都调用 LLM，成本/延迟可能失控。</td>
+              <td>设定 token 预算上限、缓存与最小上下文；确定性逻辑承担排程，LLM 只做拆分与解释。</td>
+            </tr>
+            <tr>
+              <td>Schoology 数据获取失败</td>
+              <td>手动录入削弱“信息聚合”价值；插件受 DOM/反爬/ToS 影响失效。</td>
+              <td>MVP 锁定手动+模拟并降低录入摩擦（解析教学大纲）；插件/API 作为需评审的升级路径。</td>
+            </tr>
+            <tr>
+              <td>智能体做出差的日程安排</td>
+              <td>错误计划会很快降低用户信任。</td>
+              <td>显示原因、信心、撤销，要求重大变更确认；确定性约束兜底 + LLM 评测集。</td>
+            </tr>
+            <tr>
+              <td>提醒被忽略</td>
+              <td>产品必须真的影响行为。</td>
+              <td>用签到式对话、每日规划固定环节，以及未来更高可见度的渠道；控制频率避免轰炸。</td>
+            </tr>
+            <tr>
+              <td>成绩估算错误</td>
+              <td>学生可能过度信任成绩计算。</td>
+              <td>展示假设、标记为估算；MVP 仅做只读示例。</td>
+            </tr>
+            <tr>
+              <td>无 QA / 回滚</td>
+              <td>自动改日程的产品缺回归测试尤其危险。</td>
+              <td>Week 3 预留测试缓冲，建关键路径回归用例，提供撤销/恢复。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s18">
+      <h2>18. 演示脚本</h2>
+      <div class="card">
+        <ol>
+          <li>输入固定安排：睡觉、上课、田径、健身、吃饭。</li>
+          <li>（onboarding）展示冷启动录入的摩擦评估：录入课表与固定安排大约需要多久，如何用粘贴解析降低成本。</li>
+          <li>导入或创建一个有截止日期和评分量规的生物纪录片作业。</li>
+          <li>让智能体规划这个作业，展示把作业拆成规划、研究、拍摄、剪辑和复习时间块，并说明每个块为什么被安排在那里。</li>
+          <li><strong>压力场景</strong>：临时新增一个紧急作业，展示智能体触发批量重排以消解冲突。</li>
+          <li>告诉智能体：“我周六下午 5–8 点要出去。”展示日程更新，并让智能体解释移动了什么。</li>
+          <li>展示“若无此产品学生会怎样”的对照，说明 AI 排布的取舍。</li>
+          <li>展示每日规划消息，以及成绩感知优先级示例（明确标注为“未来能力预览 / 只读示例”）。</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="s19">
+      <h2>19. 术语表</h2>
+      <div class="card">
+        <dl class="glossary">
+          <dt>HLDD</dt><dd>High-Level Design Document，高层设计文档。</dd>
+          <dt>MVP</dt><dd>最小可行产品（Minimum Viable Product）。</dd>
+          <dt>LLM</dt><dd>大语言模型（Large Language Model）。</dd>
+          <dt>MCP</dt><dd>模型上下文协议（Model Context Protocol），Codex 通过它挂载自定义工具。</dd>
+          <dt>Codex</dt><dd>OpenAI 开源编码/智能体框架（<code>openai/codex</code>），含 Rust 核心 codex-rs、Codex SDK 与 app-server，提供工具调用循环；本项目复用最新上游版本作为智能体运行时。</dd>
+          <dt>abg-agent-swarm</dt><dd>参考项目（Drive Master），基于 Codex 二次开发，提供聊天 UI 与 OAuth 集成的可复用集成范例。</dd>
+          <dt>时间块 / block</dt><dd>日程的基本单元，带元数据、可被智能体推理与移动。</dd>
+          <dt>评分量规 / rubric</dt><dd>老师给出的评分标准，说明各部分如何计分。</dd>
+          <dt>主要成绩项 / major grade</dt><dd>权重较高的成绩项（如大考、大项目）。</dd>
+          <dt>GPA</dt><dd>平均学分绩点（Grade Point Average）。</dd>
+          <dt>AP 微积分 BC</dt><dd>美国大学先修（Advanced Placement）微积分 BC 课程。</dd>
+          <dt>agentic</dt><dd>具备自主行动能力的——模型拥有工具、状态与目标，而不只是应答。</dd>
+          <dt>RRULE</dt><dd>日历重复规则（Recurrence Rule），用于表示周期性事件。</dd>
+          <dt>OAuth 1.0</dt><dd>Schoology 采用的开放授权协议版本（基于签名）。</dd>
+          <dt>REST API</dt><dd>基于 HTTP 的应用编程接口风格。</dd>
+          <dt>Prompt injection</dt><dd>攻击者通过不可信输入操纵 LLM 执行非预期行为。</dd>
+          <dt>ToS</dt><dd>服务条款（Terms of Service）。</dd>
+          <dt>DoD</dt><dd>完成定义（Definition of Done），任务被视为完成的可验证标准。</dd>
+        </dl>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>讨论与迭代用 HLDD 草稿。推荐 MVP 是一个日程板加智能体循环：能拆分作业、安排时间块、解释决策，并响应自然语言的日程变化；实现基于 abg-agent-swarm（Codex）二次开发。</p>
+      <p class="muted"><strong>修订记录</strong>：v0.1（2026-06）初稿；v0.2（2026-07-01）经多视角评审修订——补充成功指标、排程算法方向、数据模型字段、工具契约、循环健壮性、风险与验收，统一术语、修正架构图箭头与英文版链接、新增目录与术语表；v0.3（2026-07-01）明确以上游 Codex 为运行时底座、abg-agent-swarm 提供聊天 UI 与 OAuth，并据此调整范围与风险，精简市场对比章节；v0.4（2026-07-01）第二轮验证评审后收敛——统一技术底座口径与复用边界（MCP 挂工具、净新增工作显式化）、把拖拽编辑与批量重排排入周 DoD、补充调度/并发/移动端风险、术语表补 LLM/MCP/ToS。</p>
+    </div>
+  </main>
+</body>
+</html>
